@@ -1,0 +1,12 @@
+// pokemon-match-game.client/tsconfig.app.json
+
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  // ... 其他設定 ...
+  "compilerOptions": {
+    // ... 其他設定 ...
+    "paths": {
+      "@/*": ["./src/*"] // <-- 必須在這裡
+    }
+  }
+}

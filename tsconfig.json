@@ -1,0 +1,21 @@
+// pokemon-match-game.client/tsconfig.json
+
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ],
+  "compilerOptions": {
+    // *** 這是關鍵步驟：將 paths 放在根配置中 ***
+    // 雖然這裡的 options 是空的，但它允許您定義 paths
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"] 
+    }
+  }
+}
