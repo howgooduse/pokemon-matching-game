@@ -1,13 +1,28 @@
 <!DOCTYPE html>
 <html lang="">
-  <head>
-    <meta charset="UTF-8">
-    <link rel="icon" href="/favicon.ico">
-    <link rel="manifest" href="/manifest.json">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PLAY</title>
-  </head>
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="canonical" href="https://www.howhowplay.tw/" />
+    
+    <!-- 🎯 1. 新增標準的 meta name="description" 作為網站預設描述 -->
+    <meta name="description" content="寶可夢記憶遊戲，挑戰你的記憶極限!" /> 
+
+    <!-- 2. Open Graph tags - 建議也由 router.afterEach 動態更新 -->
+    <meta property="og:title" content="寶可夢記憶遊戲" />
+    <meta property="og:description" content="寶可夢記憶遊戲，挑戰你的記憶極限！" />
+    <meta property="og:image" content="https://www.howhowplay.tw//assets/share-image.png" />
+    <meta property="og:url" content="https://www.howhowplay.tw/" />
+    <meta property="og:type" content="website" />   
+    
+    <!-- 3. Twitter Card tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLAY</title>
+  </head>
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
