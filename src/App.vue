@@ -3,17 +3,19 @@
 import GamePlay from './views/GamePlay.vue'; 
 
 // 這裡您可以引入其他全域組件，例如 Header.vue (如果您有)
-// import Header from './components/Header.vue';
+import Header from '@/components/Header.vue';
 </script>
 
 <template>
-  <div id="app-root">
-    
-    <main class="main-content">
-      <GamePlay />
-    </main>
+  <v-app id="app-root"> 
+    <!-- HeaderMenu -->
+    <Header />
 
-  </div>
+    <v-main class="main-content">
+      <GamePlay />
+    </v-main>
+
+  </v-app>
 </template>
 
 <style>

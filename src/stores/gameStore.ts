@@ -46,44 +46,40 @@ export const useGameStore = defineStore('game', () => {
   const gameTimer = ref<number | null>(null);
 
   // ----------------- 遊戲初始化 -----------------
-  function initializeGame(deckSize: number, initialTime: number) {
-    if (isGameActive.value) return;
-
-    score.value = 0;
-    timeLimit.value = initialTime;
-    timeRemaining.value = initialTime;
-    helpsRemaining.value = 3;
-    isGameActive.value = true;
-    flippedCards.value = [];
+  function initializeGame(deckSize: number, initialTime: number,shouldStartTimer: boolean) {
+    // 不管遊戲是否啟動，都可以重新初始化牌組 (例如：在 onMounted 時)
+    stopTimer(); // 確保重新開始前停止計時器
     
-    // 假設我們有 151 個寶可夢 ID 可選
-    const allPokemonIds = Array.from({ length: 150 }, (_, i) => i + 1);
-    
-    // 確定需要多少對卡牌 (例如 4x4=16 張, 需要 8 對)
-    const numPairs = deckSize / 2;
-    
-    // 隨機選取 numPairs 個寶可夢 ID
-    const selectedIds = shuffleArray(allPokemonIds).slice(0, numPairs);
-    
-    const cardPairs: Card[] = [];
-    let uniqueCardId = 0; // 【修正點：使用獨立計數器】
-    
-    selectedIds.forEach((id) => { // 不再使用 index 進行 ID 計算
-        // 第一張卡
-        cardPairs.push({ 
-            id: uniqueCardId++, // 自動遞增
-            pokemonId: id, 
-            isFlipped: false, 
-            isMatched: false 
-        });
-        
-        // 第二張卡
-        cardPairs.push({ 
-            id: uniqueCardId++, // 自動遞增
-            pokemonId: id, 
-            isFlipped: false, 
-            isMatched: false 
-        });
+    score.value = 0;
+    timeLimit.value = initialTime;
+    timeRemaining.value = initialTime;
+    helpsRemaining.value = 3;
+    flippedCards.value = [];
+    isGameActive.value = shouldStartTimer; // 根據參數設定遊戲狀態
+    
+    const allPokemonIds = Array.from({ length: 150 }, (_, i) => i + 1);
+    const numPairs = deckSize / 2;
+    const selectedIds = shuffleArray(allPokemonIds).slice(0, numPairs);
+    
+    const cardPairs: Card[] = [];
+    let uniqueCardId = 0;
+    
+    selectedIds.forEach((id) => {
+        // 第一張卡
+        cardPairs.push({ 
+            id: uniqueCardId++,
+            pokemonId: id, 
+            isFlipped: false, // 確保所有牌都是反面
+            isMatched: false 
+        });
+        
+        // 第二張卡
+        cardPairs.push({ 
+            id: uniqueCardId++,
+            pokemonId: id, 
+            isFlipped: false, // 確保所有牌都是反面
+            isMatched: false 
+        });
     });
 
     // 打亂最終卡牌列表
@@ -95,37 +91,26 @@ export const useGameStore = defineStore('game', () => {
   
   // ----------------- 計時器邏輯 -----------------
   function startTimer() {
-    if (gameTimer.value !== null) clearInterval(gameTimer.value);
+     if (gameTimer.value !== null) clearInterval(gameTimer.value);
 
-    // 關鍵修正：直接使用 window.setInterval，並用 <number> 斷言
     gameTimer.value = window.setInterval(() => {
-      if (timeRemaining.value > 0 && isGameActive.value) {
-        timeRemaining.value--;
-      } else {
-        // 使用非空斷言 (!) 告訴 TypeScript gameTimer.value 此時非空
-        clearInterval(gameTimer.value!);
-        // 檢查是否是時間耗盡導致遊戲結束
-        if (isGameActive.value) {
-          endGame();
+        if (timeRemaining.value > 0 && isGameActive.value) {
+            timeRemaining.value--;
+        } else {
+            clearInterval(gameTimer.value!);
+            if (isGameActive.value) {
+                endGame();
+            }
         }
-      }
-    }, 1000) as unknown as number; // 您的寫法雖然較為繁瑣，但理應有效
+    }, 1000) as unknown as number; 
     
-    // **替代的、更清晰的寫法：**
-    // gameTimer.value = window.setInterval(...) as number;
-    // 因為在瀏覽器環境中，setInterval 的回傳值就是 number
   }
 
   function stopTimer() {
-    if (gameTimer.value !== null) clearInterval(gameTimer.value);
-    gameTimer.value = null;
+   if (gameTimer.value !== null) clearInterval(gameTimer.value);
+    gameTimer.value = null;
   }
 
-  // ----------------- 遊戲核心邏輯 -----------------
-  
-  // src/stores/gameStore.ts (部分修改)
-
-// ... (省略前面的程式碼)
 
 // ----------------- 遊戲核心邏輯 -----------------
   
@@ -204,8 +189,13 @@ export const useGameStore = defineStore('game', () => {
   // ----------------- 遊戲結束 -----------------
   function endGame() {
     stopTimer();
-    isGameActive.value = false;
-    
+    // *** 修正：確保在設置 isGameActive = false 之前，先檢查是否所有卡牌都匹配或時間耗盡 ***
+    const isGameCompleted = cards.value.length > 0 && cards.value.every(c => c.isMatched);
+    const isTimeExpired = timeRemaining.value <= 0;
+
+    if (isGameCompleted || isTimeExpired) {
+        isGameActive.value = false;
+    }
     // **觸發分數提交流程**
     // 這裡應該調用一個 API 服務來提交 score.value 和 timeRemaining.value
     // 例如: submitScore(score.value, timeLimit.value - timeRemaining.value);
@@ -214,6 +204,6 @@ export const useGameStore = defineStore('game', () => {
 
   return { 
     cards, score, timeLimit, timeRemaining, helpsRemaining, isGameActive, isChecking,
-    initializeGame, flipCard, useHelp, endGame 
+    initializeGame, flipCard, useHelp, endGame , startTimer, stopTimer
   };
 });

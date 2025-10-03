@@ -1,61 +1,82 @@
 <script setup lang="ts">
-import { onMounted, ref,computed } from 'vue';
-import { useGameStore,type Card } from '../stores/gameStore';
-import GameCard from '../components/GameCard.vue';
+import { onMounted, ref, computed } from 'vue';
+import { useGameStore, type Card } from '@/stores/gameStore';
+import GameCard from '@/components/GameCard.vue';
 import { scoresApi } from '@/api';
 
 const gameStore = useGameStore();
-const deckSize = ref(16); // 預設 4x4 可以有 16 36 64 100 144
+const deckSize = ref(16); // 預設 4x4
 const initialTime = ref(60);
 
 onMounted(() => {
-  // 如果是第一次載入，可以自動初始化，或者等待用戶在 GameSetup 頁面點擊開始
-  // gameStore.initializeGame(deckSize.value, initialTime.value);
+     // *** 修正：第一次載入時必須初始化牌組，但不啟動計時器 (false) ***
+    gameStore.initializeGame(deckSize.value, initialTime.value, false); 
+});
+
+// 新增：一個計算屬性，用於控制 GameCard 是否可被點擊
+const isCardClickable = computed(() => {
+    // 只有在遊戲進行中(isGameActive) 且 不在檢查配對中(isChecking) 時才能點擊
+    return gameStore.isGameActive ;
 });
 
 // 模擬獲取寶可夢圖片的 URL
 const getPokemonImageUrl = (id: number): string => {
-  // **重要：替換為您的實際寶可夢圖片路徑**
-  // 假設您的圖片檔名是 /public/assets/pokemon/1.png, 2.png, ...
-  return `/assets/pokemon/${id}.png`; 
+    return `/assets/pokemon/${id}.png`; 
 };
 
-const gameoverAlert = computed(() =>{
-    return !gameStore.isGameActive && !gameStore.isChecking && gameStore.cards.length > 0;
-})
+// 遊戲結束彈窗邏輯
+const gameoverAlert = computed(() => {
+    // 遊戲結束必須滿足以下兩個條件之一：
+    // 1. 遊戲非進行中 (isGameActive=false)
+    // 2. 牌組已經生成 (cards.length > 0)
+    // 3. 排除首次載入時的誤判：檢查 timeRemaining 是否不等於 initialTime
+    //    或者檢查是否所有卡牌都匹配。
+    
+    // 最可靠的方式：檢查遊戲是否被主動停止，並且牌組已完成。
+    const gameFinished = gameStore.cards.length > 0 && 
+                         (gameStore.cards.every(c => c.isMatched) || gameStore.timeRemaining <= 0);
 
-const timePercentage = computed(() => {
-    // 確保 initialTime.value 大於 0 避免除以零
-    if (initialTime.value > 0) {
-        // 計算剩餘時間佔總時間的百分比
-        return (gameStore.timeRemaining / initialTime.value) * 100;
-    }
-    return 0; // 遊戲未開始或時間為 0
+    // 只有在遊戲狀態被設為非活動，並且遊戲確實結束 (時間到/完成配對) 時才顯示
+    return !gameStore.isGameActive && gameFinished;
 });
 
-// 計算進度條顏色
+const timePercentage = computed(() => {
+    if (initialTime.value > 0) {
+        return (gameStore.timeRemaining / initialTime.value) * 100;
+    }
+    return 0;
+});
+
+
 const timerBarColor = computed(() => {
-    // 遊戲結束或時間用完時，顯示深灰色
     if (timePercentage.value <= 0) {
-        // Vuetify 的顏色名稱：'grey'
         return 'grey'; 
     } 
-    // 剩餘 10 秒及以下時為紅色
     else if (gameStore.timeRemaining <= 10) {
         return 'red-accent-3'; 
     } 
-    // 預設為藍色
     else {
         return 'blue-accent-3'; 
     }
 });
 
-// 檢查遊戲是否結束，用於控制動畫效果
+// *** 關鍵修正：處理點擊開始遊戲按鈕的邏輯 ***
+const startGame = () => {
+    // 重新初始化遊戲 (會重新洗牌並啟動計時器)
+    gameStore.initializeGame(deckSize.value, initialTime.value,true); 
+};
+
+// 處理再玩一次按鈕的邏輯
+const onGameoverAlertClick = () => {
+    // 這裡只需要初始化牌組，但**不啟動**計時器，讓使用者點擊「開始新遊戲」
+    gameStore.initializeGame(deckSize.value, initialTime.value, false);
+};
+
 const isTimeUp = computed(() => timePercentage.value <= 0);
 
-// 處理遊戲結束後的分數提交流程
+// 處理遊戲結束後的分數提交流程 (保持不變)
 const handleGameEnd = async () => {
-    // 這裡調用您在 gameStore.ts 中設置的 endGame()
+     // 這裡調用您在 gameStore.ts 中設置的 endGame()
     // 我們需要在 gameStore 中確保 endGame 邏輯已經運行
     
     // 計算花費的時間
@@ -81,38 +102,14 @@ const handleGameEnd = async () => {
 </script>
 
 <template>
-  <div class="game-container">
-    <h1 class="text-3xl font-bold mb-4">寶可夢翻牌配對</h1>
-<!--
-    <div class="info-panel">
-      <div>分數: {{ gameStore.score }}</div>
-      <div>時間: {{ gameStore.timeRemaining }}s</div>
-      <div>求助: {{ gameStore.helpsRemaining }} 次</div>
-    </div>
-    -->
-    <div class="controls-panel">
-        <v-btn density="default"
-            color="blue-darken-2"
-            @click="gameStore.initializeGame(deckSize, initialTime)" 
-            :disabled="gameStore.isGameActive"> {{ gameStore.isGameActive ? '遊戲進行中' : '開始新遊戲' }}</v-btn>
-      <!--
-        <button 
-                @click="gameStore.useHelp('time')" 
-                :disabled="gameStore.helpsRemaining <= 0 || !gameStore.isGameActive"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
-            >
-                +5秒 ({{ gameStore.helpsRemaining }})
-            </button>
-        <button 
-            @click="gameStore.useHelp('match')" 
-            :disabled="gameStore.helpsRemaining <= 0 || !gameStore.isGameActive"
-            class="bg-yellow-500 hover:bg-yellow-700 text-black font-bold py-2 px-4 rounded ml-2"
-        >
-            自動配對
-        </button>
-        -->
-    </div>
-<v-card 
+  <div class="game-container">
+    <h1 class="text-2xl font-bold mb-4">Play 一對!</h1>
+    <div class="controls-panel">
+        <v-btn density="default" color="blue-darken-2" @click="startGame" 
+            :disabled="gameStore.isGameActive"> {{ gameStore.isGameActive ? '遊戲中' : '開始遊戲' }}</v-btn>
+    </div>
+    
+  <v-card 
         class="time-progress-card" 
         flat
         v-if="gameStore.isGameActive || gameStore.cards.length > 0">
@@ -137,32 +134,22 @@ const handleGameEnd = async () => {
         v-for="card in gameStore.cards"
         :key="card.id"
         :card="card"
-        :getPokemonImageUrl="getPokemonImageUrl"
-      />
+       :getPokemonImageUrl="getPokemonImageUrl" :is-clickable="isCardClickable"
+       :class="{'is-disabled': !isCardClickable}"/>
     </div>
-    <v-dialog 
+    
+    <v-dialog 
         v-model="gameoverAlert"
         width="auto">
-        <div class="game-over-message">
-            <div style="text-align: center;">使用時間 : {{ initialTime - gameStore.timeRemaining }} s</div>
-            <!--關閉視窗-->
-            <!--
-            <v-btn density="default"
-            color="blue-darken-2" class="ms-auto"
-            text="Ok"
-            @click="gameStore.isGameActive = false"
-          ></v-btn>-->
-          <!--再玩一次按鈕-->
-          <v-btn density="default"
-             class="ms-auto"
-            color="blue-darken-2"
-            @click="gameStore.initializeGame(deckSize, initialTime)">
-             {{ '再玩一次' }}</v-btn>
-        </div>
-    </v-dialog>
-    
-
-  </div>
+        <div class="game-over-message">
+            <div style="text-align: center;">使用時間 : {{ initialTime - gameStore.timeRemaining }} s</div>
+          <v-btn density="default"
+                class="ms-auto"
+                color="blue-darken-2"
+                @click="onGameoverAlertClick"> {{ '再玩一次' }}</v-btn>
+        </div>
+    </v-dialog>
+  </div>
 </template>
 
 <style scoped>
@@ -210,6 +197,26 @@ const handleGameEnd = async () => {
     background-color: #f0f0f0;
     border-radius: 10px;
 }
+
+.game-board > .is-disabled {
+    /* 顏色變化：降低透明度，讓卡牌看起來像是「鎖住」或「變灰」 */
+    opacity: 0.5; 
+    
+    /* 鼠標變化：顯示禁止符號，明確告知玩家無法點擊 */
+    cursor: not-allowed; 
+    
+    /* (可選) 增加過渡效果，讓狀態變化更平滑 */
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+/* 如果您希望在滑鼠懸停時也保持禁止狀態 */
+.game-board > .is-disabled:hover {
+    /* 移除懸停時可能帶來的提升效果 (例如 scale 或 shadow) */
+    transform: none; 
+    box-shadow: none;
+}
+
 .info-panel, .controls-panel {
     margin-bottom: 20px;
     text-align: center;
@@ -222,5 +229,4 @@ const handleGameEnd = async () => {
     background-color: #f0f0f0;
     opacity: 0.9;
 }
-
 </style>
