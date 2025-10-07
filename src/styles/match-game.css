@@ -1,0 +1,1535 @@
+/* ========== 基礎容器 ========== */
+.match-game-container {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+}
+
+.match-game-container * {
+  box-sizing: border-box;
+}
+
+/* ========== 遊戲資訊列 ========== */
+.game-info-bar {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 15px 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.info-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.info-label {
+  font-size: 12px;
+  color: #666;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #667eea;
+}
+
+.info-value.time-warning {
+  color: #f44336;
+  animation: time-warning 1s ease-in-out infinite;
+}
+
+.btn-help {
+  padding: 8px 16px;
+  border: 2px solid #667eea;
+  border-radius: 8px;
+  background: white;
+  color: #667eea;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-help:hover {
+  background: #667eea;
+  color: white;
+}
+
+/* ========== 開始遊戲覆蓋層 ========== */
+.start-game-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 500;
+  text-align: center;
+}
+
+.btn-start-main {
+  padding: 25px 80px;
+  font-size: 36px;
+  font-weight: bold;
+  border: none;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+  transition: all 0.3s;
+  animation: pulse-big 2s ease-in-out infinite;
+}
+
+@keyframes pulse-big {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.7);
+  }
+}
+
+.btn-start-main:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 15px 45px rgba(102, 126, 234, 0.7);
+  animation: none;
+}
+
+.btn-start-main:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+/* ========== 遊戲控制列 ========== */
+.game-controls {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 15px 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.control-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #f0f0f0, #ffffff);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.control-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.tool-btn-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #ffffff, #f5f5f5);
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.tool-btn-main:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(145deg, #667eea, #764ba2);
+  color: white;
+}
+
+.tool-btn-main:hover:not(:disabled) .tool-count {
+  background: white;
+  color: #667eea;
+}
+
+.tool-btn-main:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tool-icon {
+  font-size: 24px;
+}
+
+.tool-text {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.tool-count {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 12px;
+  min-width: 28px;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+/* ========== 響應式 - 遊戲資訊列 ========== */
+@media (max-width: 767px) {
+  .game-info-bar {
+    padding: 12px 15px;
+    gap: 15px;
+  }
+
+  .info-label {
+    font-size: 10px;
+  }
+
+  .info-value {
+    font-size: 18px;
+  }
+
+  .btn-help {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .btn-start-main {
+    padding: 20px 50px;
+    font-size: 28px;
+  }
+
+  .game-controls {
+    padding: 12px 15px;
+    gap: 10px;
+  }
+
+  .control-btn {
+    padding: 10px 18px;
+    font-size: 14px;
+  }
+
+  .tool-btn-main {
+    padding: 10px 15px;
+    gap: 6px;
+  }
+
+  .tool-icon {
+    font-size: 20px;
+  }
+
+  .tool-text {
+    font-size: 14px;
+  }
+
+  .tool-count {
+    font-size: 12px;
+    padding: 3px 8px;
+  }
+}
+
+/* ========== 遊戲開始區塊 ========== */
+.game-start-section {
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  animation: fadeInDown 0.6s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.game-title-area {
+  margin-bottom: 30px;
+}
+
+.game-title {
+  font-size: 48px;
+  font-weight: bold;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 10px;
+  margin-top: 0;
+}
+
+.game-subtitle {
+  font-size: 18px;
+  color: #666;
+  font-weight: 500;
+  margin: 0;
+}
+
+.start-controls {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-start-game {
+  padding: 20px 60px;
+  font-size: 28px;
+  font-weight: bold;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+  transition: all 0.3s;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 12px 28px rgba(102, 126, 234, 0.6);
+  }
+}
+
+.btn-start-game:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.6);
+  animation: none;
+}
+
+.btn-instructions {
+  padding: 16px 32px;
+  font-size: 18px;
+  font-weight: 600;
+  border: 2px solid #667eea;
+  border-radius: 12px;
+  background: white;
+  color: #667eea;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-instructions:hover {
+  background: #667eea;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
+}
+
+/* ========== 遊戲頂部資訊欄 ========== */
+.game-header {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 15px 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-left,
+.header-right {
+  display: flex;
+  gap: 10px;
+}
+
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #f0f0f0, #ffffff);
+  cursor: pointer;
+  font-size: 20px;
+  transition: all 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.icon-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.icon-btn:active {
+  transform: translateY(0);
+}
+
+/* 工具按鈕 */
+.tool-btn {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #ffffff, #f5f5f5);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tool-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.tool-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tool-icon-small {
+  font-size: 24px;
+}
+
+.tool-count-small {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 3px 7px;
+  border-radius: 10px;
+  min-width: 20px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* 統計數據 */
+.game-stats {
+  display: flex;
+  gap: 30px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #666;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.stat-value.level {
+  color: #667eea;
+}
+
+.stat-value.score {
+  color: #4caf50;
+}
+
+.stat-value.combo {
+  color: #ff9800;
+}
+
+.stat-value.combo.high-combo {
+  animation: combo-pulse 0.5s ease-in-out;
+  color: #f44336;
+}
+
+@keyframes combo-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.stat-value.time {
+  color: #2196f3;
+}
+
+.stat-value.time.time-warning {
+  color: #f44336;
+  animation: time-warning 1s ease-in-out infinite;
+}
+
+@keyframes time-warning {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* ========== 遊戲棋盤 ========== */
+.game-board-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.game-board {
+  display: grid;
+  gap: 8px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* SVG 連線覆蓋層 */
+.connection-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.connection-line {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: draw-line 0.4s ease-out forwards;
+}
+
+@keyframes draw-line {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.connection-dot {
+  animation: dot-pulse 0.6s ease-in-out infinite;
+}
+
+@keyframes dot-pulse {
+  0%,
+  100% {
+    r: 8;
+    opacity: 1;
+  }
+  50% {
+    r: 12;
+    opacity: 0.6;
+  }
+}
+
+/* ========== 連擊彈出效果 ========== */
+.combo-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  text-align: center;
+  pointer-events: none;
+}
+
+.combo-text {
+  display: block;
+  font-size: 48px;
+  font-weight: bold;
+  color: #ff9800;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  animation: combo-scale 0.6s ease-out;
+}
+
+.combo-score {
+  display: block;
+  font-size: 32px;
+  font-weight: bold;
+  color: #4caf50;
+  margin-top: 10px;
+  animation: score-float 1s ease-out;
+}
+
+@keyframes combo-scale {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes score-float {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+}
+
+.combo-popup-enter-active {
+  animation: combo-appear 0.4s ease-out;
+}
+
+.combo-popup-leave-active {
+  animation: combo-disappear 0.4s ease-out;
+}
+
+@keyframes combo-appear {
+  from {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes combo-disappear {
+  from {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+  }
+}
+
+/* ========== 彈窗樣式 ========== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+}
+
+.modal {
+  background: white;
+  border-radius: 24px;
+  padding: 40px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.modal h2 {
+  font-size: 36px;
+  margin-bottom: 30px;
+  margin-top: 0;
+  color: #333;
+}
+
+/* 玩法說明彈窗 */
+.instructions-modal {
+  max-width: 600px;
+}
+
+.instructions-modal h2 {
+  font-size: 32px;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.instructions-content {
+  text-align: left;
+  margin: 30px 0;
+}
+
+.instructions-content .instruction-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px;
+  margin-bottom: 15px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border-left: 4px solid #667eea;
+  transition: all 0.3s;
+}
+
+.instructions-content .instruction-item:last-child {
+  margin-bottom: 0;
+}
+
+.instructions-content .instruction-item:hover {
+  background: #f0f2f5;
+  transform: translateX(5px);
+}
+
+.instructions-content .instruction-icon {
+  font-size: 36px;
+  flex-shrink: 0;
+}
+
+.instruction-detail {
+  flex: 1;
+}
+
+.instruction-detail strong {
+  display: block;
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.instruction-detail p {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* 暫停選單 */
+.pause-stats,
+.game-over-stats {
+  margin: 30px 0;
+  padding: 20px;
+  background: #f5f5f5;
+  border-radius: 12px;
+}
+
+.pause-stats p {
+  font-size: 18px;
+  margin: 10px 0;
+  color: #555;
+}
+
+/* 遊戲結束統計 */
+.game-over-stats .stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.game-over-stats .stat-row:last-child {
+  border-bottom: none;
+}
+
+.game-over-stats .label {
+  font-size: 16px;
+  color: #666;
+  font-weight: 500;
+}
+
+.game-over-stats .value {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.game-over-stats .value.highlight {
+  color: #4caf50;
+  font-size: 24px;
+}
+
+.game-over-stats .value.bonus {
+  color: #ff9800;
+}
+
+.new-record {
+  margin: 20px 0;
+  padding: 15px;
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  border-radius: 12px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  animation: record-shine 2s ease-in-out infinite;
+}
+
+@keyframes record-shine {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
+  }
+}
+
+/* 彈窗按鈕 */
+.modal-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 16px 32px;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: linear-gradient(145deg, #f5f5f5, #ffffff);
+  color: #667eea;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+}
+
+/* 彈窗動畫 */
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-enter-active .modal,
+.modal-leave-active .modal {
+  transition: transform 0.3s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-from .modal,
+.modal-leave-to .modal {
+  transform: scale(0.9);
+}
+
+/* ========== 響應式設計 ========== */
+
+/* 超小手機 (< 375px) */
+@media (max-width: 374px) {
+  .game-start-section {
+    padding: 20px 15px;
+  }
+
+  .game-title {
+    font-size: 28px;
+  }
+
+  .game-subtitle {
+    font-size: 12px;
+  }
+
+  .start-controls {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .btn-start-game {
+    padding: 16px 30px;
+    font-size: 20px;
+    width: 100%;
+  }
+
+  .btn-instructions {
+    padding: 10px 20px;
+    font-size: 14px;
+    width: 100%;
+  }
+
+  .match-game-container {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .game-header {
+    padding: 10px 12px;
+    flex-wrap: wrap;
+  }
+
+  .header-left,
+  .header-right {
+    gap: 6px;
+  }
+
+  .icon-btn,
+  .tool-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .tool-icon-small {
+    font-size: 20px;
+  }
+
+  .game-stats {
+    gap: 5px;
+    width: 100%;
+    justify-content: center;
+    order: -1;
+  }
+
+  .stat-item {
+    min-width: 60px;
+  }
+
+  .stat-label {
+    font-size: 9px;
+  }
+
+  .stat-value {
+    font-size: 16px;
+  }
+
+  .game-board {
+    gap: 3px;
+    padding: 8px;
+  }
+
+  .combo-text {
+    font-size: 28px;
+  }
+
+  .combo-score {
+    font-size: 20px;
+  }
+}
+
+/* 手機 (375px - 767px) */
+@media (min-width: 375px) and (max-width: 767px) {
+  .game-start-section {
+    padding: 25px 15px;
+  }
+
+  .game-title {
+    font-size: 32px;
+  }
+
+  .game-subtitle {
+    font-size: 14px;
+  }
+
+  .start-controls {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .btn-start-game {
+    padding: 18px 40px;
+    font-size: 24px;
+    width: 100%;
+  }
+
+  .btn-instructions {
+    padding: 12px 24px;
+    font-size: 16px;
+    width: 100%;
+  }
+
+  .instructions-modal {
+    max-width: 95%;
+  }
+
+  .instructions-content .instruction-item {
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .instructions-content .instruction-icon {
+    font-size: 28px;
+  }
+
+  .instruction-detail strong {
+    font-size: 16px;
+  }
+
+  .instruction-detail p {
+    font-size: 13px;
+  }
+
+  .match-game-container {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .game-header {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px 15px;
+  }
+
+  .header-left {
+    order: 1;
+  }
+
+  .game-stats {
+    order: 0;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 5px;
+  }
+
+  .header-right {
+    order: 2;
+    margin-left: auto;
+  }
+
+  .stat-item {
+    min-width: 70px;
+  }
+
+  .stat-label {
+    font-size: 10px;
+  }
+
+  .stat-value {
+    font-size: 18px;
+  }
+
+  .tool-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .tool-icon-small {
+    font-size: 22px;
+  }
+
+  .game-board {
+    gap: 4px;
+    padding: 10px;
+    border-radius: 12px;
+    max-width: 95vw;
+  }
+
+  .modal {
+    padding: 25px 15px;
+    width: 95%;
+  }
+
+  .modal h2 {
+    font-size: 24px;
+  }
+
+  .combo-text {
+    font-size: 32px;
+  }
+
+  .combo-score {
+    font-size: 24px;
+  }
+}
+
+/* 平板 (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .match-game-container {
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .game-header {
+    padding: 15px 20px;
+  }
+
+  .stat-value {
+    font-size: 22px;
+  }
+
+  .game-board {
+    gap: 6px;
+    padding: 15px;
+    max-width: 90vw;
+  }
+}
+
+/* 電腦版 (≥ 1024px) */
+@media (min-width: 1024px) {
+  .game-board {
+    gap: 10px;
+    padding: 25px;
+    max-width: 1100px;
+  }
+}
+
+/* ========== 整合的遊戲頂部列 ========== */
+.game-top-bar {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 15px 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+/* 左側區域 */
+.top-bar-left {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-width: 150px;
+}
+
+.btn-help,
+.btn-pause {
+  padding: 8px 16px;
+  border: 2px solid #667eea;
+  border-radius: 8px;
+  background: white;
+  color: #667eea;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.btn-help:hover,
+.btn-pause:hover {
+  background: #667eea;
+  color: white;
+  transform: translateY(-1px);
+}
+
+/* 中間區域 - 遊戲資訊 */
+.top-bar-center {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.info-label {
+  font-size: 11px;
+  color: #666;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-value {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+}
+
+.info-value.score {
+  color: #4caf50;
+}
+
+.info-value.combo {
+  color: #ff9800;
+}
+
+.info-value.combo.high-combo {
+  animation: combo-pulse 0.5s ease-in-out;
+  color: #f44336;
+}
+
+.info-value.time {
+  color: #2196f3;
+}
+
+.info-value.time.time-warning {
+  color: #f44336;
+  animation: time-warning 1s ease-in-out infinite;
+}
+
+/* 右側區域 - 道具按鈕 */
+.top-bar-right {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-width: 150px;
+  justify-content: flex-end;
+}
+
+.tool-btn-compact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #ffffff, #f5f5f5);
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-width: 60px;
+}
+
+.tool-btn-compact:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(145deg, #667eea, #764ba2);
+}
+
+.tool-btn-compact:hover:not(:disabled) .tool-icon {
+  transform: scale(1.1);
+}
+
+.tool-btn-compact:hover:not(:disabled) .tool-label,
+.tool-btn-compact:hover:not(:disabled) .tool-num {
+  color: white;
+}
+
+.tool-btn-compact:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.tool-icon {
+  font-size: 20px;
+  transition: transform 0.3s;
+}
+
+.tool-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+  transition: color 0.3s;
+}
+
+.tool-num {
+  font-size: 13px;
+  font-weight: bold;
+  color: #667eea;
+  transition: color 0.3s;
+}
+
+/* ========== 開始遊戲按鈕 ========== */
+.start-game-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 500;
+}
+
+.btn-start-main {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;
+  padding: 25px 70px;
+  border: none;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+  transition: all 0.3s;
+  animation: pulse-big 2s ease-in-out infinite;
+}
+
+.start-btn-text {
+  font-size: 32px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.start-btn-icon {
+  font-size: 36px;
+}
+
+@keyframes pulse-big {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.7);
+  }
+}
+
+.btn-start-main:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 15px 45px rgba(102, 126, 234, 0.7);
+  animation: none;
+}
+
+.btn-start-main:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+/* ========== 響應式設計 ========== */
+
+/* 平板 (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .game-top-bar {
+    padding: 12px 15px;
+    gap: 15px;
+  }
+
+  .top-bar-left,
+  .top-bar-right {
+    min-width: 120px;
+  }
+
+  .top-bar-center {
+    gap: 15px;
+  }
+
+  .info-value {
+    font-size: 20px;
+  }
+
+  .tool-icon {
+    font-size: 18px;
+  }
+
+  .btn-start-main {
+    padding: 20px 50px;
+  }
+
+  .start-btn-text {
+    font-size: 28px;
+  }
+
+  .start-btn-icon {
+    font-size: 32px;
+  }
+}
+
+/* 手機 (375px - 767px) */
+@media (min-width: 375px) and (max-width: 767px) {
+  .game-top-bar {
+    flex-wrap: wrap;
+    padding: 10px;
+    gap: 10px;
+  }
+
+  /* 第一排：說明和暫停在左，資訊在右 */
+  .top-bar-left {
+    order: 1;
+    min-width: auto;
+    gap: 8px;
+  }
+
+  .btn-help,
+  .btn-pause {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .top-bar-center {
+    order: 2;
+    gap: 12px;
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  .info-item {
+    min-width: 50px;
+  }
+
+  .info-label {
+    font-size: 9px;
+  }
+
+  .info-value {
+    font-size: 16px;
+  }
+
+  /* 第二排：道具按鈕佔滿一整排 */
+  .top-bar-right {
+    order: 3;
+    width: 100%;
+    min-width: 100%;
+    justify-content: space-around;
+    gap: 8px;
+    margin-top: 5px;
+    padding-top: 8px;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .tool-btn-compact {
+    flex: 1;
+    min-width: 70px;
+    padding: 10px 8px;
+  }
+
+  .tool-icon {
+    font-size: 22px;
+  }
+
+  .tool-label {
+    font-size: 10px;
+  }
+
+  .tool-num {
+    font-size: 12px;
+  }
+
+  /* 開始按鈕改為兩行 */
+  .btn-start-main {
+    flex-direction: column;
+    padding: 20px 40px;
+    gap: 10px;
+  }
+
+  .start-btn-text {
+    font-size: 24px;
+  }
+
+  .start-btn-icon {
+    font-size: 32px;
+  }
+}
+
+/* 超小手機 (< 375px) */
+@media (max-width: 374px) {
+  .game-top-bar {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .top-bar-left {
+    gap: 6px;
+  }
+
+  .btn-help,
+  .btn-pause {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+
+  .top-bar-center {
+    gap: 8px;
+  }
+
+  .info-item {
+    min-width: 45px;
+  }
+
+  .info-label {
+    font-size: 8px;
+  }
+
+  .info-value {
+    font-size: 14px;
+  }
+
+  .tool-btn-compact {
+    min-width: 60px;
+    padding: 8px 6px;
+  }
+
+  .tool-icon {
+    font-size: 20px;
+  }
+
+  .tool-label {
+    font-size: 9px;
+  }
+
+  .tool-num {
+    font-size: 11px;
+  }
+
+  .btn-start-main {
+    padding: 18px 30px;
+  }
+
+  .start-btn-text {
+    font-size: 20px;
+  }
+
+  .start-btn-icon {
+    font-size: 28px;
+  }
+}

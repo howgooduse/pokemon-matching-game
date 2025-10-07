@@ -125,15 +125,12 @@ export const useGameStore = defineStore('game', () => {
 
     if (flippedCards.value.length === 2) {
       // 暫停點擊，等待檢查
-     isChecking.value = true;
+      isChecking.value = true;
       setTimeout(checkMatch, 1000); 
     }
   }
 
-// src/stores/gameStore.ts (找到 checkMatch 函式)
-
- // src/stores/gameStore.ts (checkMatch 函式)
-
+  // 確認是否匹配
   function checkMatch() {
     const [card1, card2] = flippedCards.value;
 
@@ -146,14 +143,13 @@ export const useGameStore = defineStore('game', () => {
 
     if (card1.pokemonId === card2.pokemonId) {
       // **配對成功**
+      // 【關鍵變更點】：在成功路徑中，我們不改變 isFlipped。
+      // 它保持為 true，並由 isMatched 狀態在 GameCard.vue 中鎖定畫面。
       card1.isFlipped = true; // 鎖定狀態
       card2.isFlipped = true; // 鎖定狀態
       card1.isMatched = true; // 鎖定狀態
       card2.isMatched = true; // 鎖定狀態
-        
-      // 【關鍵變更點】：在成功路徑中，我們不改變 isFlipped。
-      // 它保持為 true，並由 isMatched 狀態在 GameCard.vue 中鎖定畫面。
-
+           
       score.value += 10;
       flippedCards.value = [];
       

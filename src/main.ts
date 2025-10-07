@@ -43,10 +43,6 @@ const updateSeoTags = (to: RouteLocationNormalized) => {
   // 2. 處理 Meta Description
   // 從路由 meta 中獲取描述，如果沒有設定則使用預設值
   const pageDescription = (to.meta.description as string) || '開始挑戰遊戲，看你能否記住所有寶可夢';
-
-  console.log(`[SEO Update] Current Route: ${to.fullPath}`);
-  console.log(`[SEO Update] Setting Title: ${pageTitle}`);
-  console.log(`[SEO Update] Setting Description: ${pageDescription}`);
   
   // 嘗試選取現有的 meta description 標籤
   let metaDescriptionTag = document.querySelector('meta[name="description"]');

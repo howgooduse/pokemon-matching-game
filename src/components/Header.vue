@@ -1,14 +1,12 @@
 <template>
-  <v-app-bar app>
+  <v-app-bar density="compact" app>
     <v-app-bar-title>
       <router-link to="/" class="text-decoration-none text-primary">
         <v-icon icon="mdi-pokeball" class="mr-2"></v-icon>
         POKEMON MATCH GAME
       </router-link>
     </v-app-bar-title>
-
     <v-spacer></v-spacer>
-
     <template v-if="display.smAndUp">
       <v-btn
         v-for="item in menuItems"
@@ -19,12 +17,10 @@
         {{ item.title }}
       </v-btn>
     </template>
-
     <template v-else>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
     </template>
   </v-app-bar>
-
   <v-navigation-drawer
     v-model="drawer"
     temporary
@@ -36,7 +32,7 @@
         :key="item.title"
         :to="item.route"
         :prepend-icon="item.icon"
-        @click="drawer = false" 
+        @click="drawer = false"
       >
         <v-list-item-title>{{ item.title }}</v-list-item-title>
       </v-list-item>
@@ -56,10 +52,8 @@ const drawer = ref(false);
 
 // 選單項目列表
 const menuItems = [
-  { title: '遊戲', icon: 'mdi-gamepad-variant', route: '/gameplay' },
-  //{ title: '設定', icon: 'mdi-cog', route: '/gamesetup' },
-  //{ title: '登入/註冊', icon: 'mdi-account', route: '/auth' },
-  // 根據你的 router/index.ts 調整路徑
+  { title: '連連看', icon: 'mdi-link-variant', route: '/' },           // 首頁改成連連看
+  { title: '翻牌遊戲', icon: 'mdi-cards', route: '/flip-game' },      // 翻牌遊戲
 ];
 </script>
 

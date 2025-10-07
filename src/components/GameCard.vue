@@ -15,21 +15,15 @@ const handleClick = () => {
 </script>
 
 <template>
-  <div class="card-container" @click="handleClick"
-  :style="card.isMatched ? { pointerEvents: 'none' } : {}" 
-  >
-    <div class="card" 
-    :class="{ 
-        'flipped': card.isFlipped,
-      }">     
+  <div class="card-container" @click="handleClick" :style="card.isMatched ? { pointerEvents: 'none' } : {}">
+    <div class="card" :class="{'flipped': card.isFlipped}">
       <div class="card-face back">
         <img src="/assets/pokeball.png" alt="Pokémon" class="pokeball-icon">
       </div>
       
       <div class="card-face front" :style="card.isMatched ? { 
-      opacity: 0.5,
-      pointerEvents: 'none'
-  } : {}">
+        opacity: 0.5,
+        pointerEvents: 'none'} : {}">
         <img :src="getPokemonImageUrl(card.pokemonId)" :alt="`Pokemon ${card.pokemonId}`">
       </div>
     </div>
