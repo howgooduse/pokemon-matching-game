@@ -57,8 +57,14 @@ export function useGameBoard(
 
     const newTiles: Tile[] = [];
     selectedPokemon.forEach((id: number) => {
-      newTiles.push({ pokemonId: id, isMatched: false, isEmpty: false });
-      newTiles.push({ pokemonId: id, isMatched: false, isEmpty: false });
+      newTiles.push({
+        pokemonId: id, isMatched: false, isEmpty: false,
+        id: ''
+      });
+      newTiles.push({
+        pokemonId: id, isMatched: false, isEmpty: false,
+        id: ''
+      });
     });
 
     tiles.value = newTiles.sort(() => Math.random() - 0.5);
