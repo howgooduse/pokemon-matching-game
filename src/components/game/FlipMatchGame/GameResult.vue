@@ -93,7 +93,7 @@ const props = defineProps({
 
 defineEmits(['restart', 'backToMenu']);
 
-const formattedTime = computed(() => {
+  const formattedTime = computed(() => {
   const minutes = Math.floor(props.timeTaken / 60);
   const seconds = props.timeTaken % 60;
   return `${minutes}:${String(seconds).padStart(2, '0')}`;
@@ -277,9 +277,10 @@ const formattedTime = computed(() => {
   transform: translateY(-2px);
 }
 
+/* 平板響應式 */
 @media (max-width: 768px) {
   .result-header {
-    padding: 32px 20px 20px;
+    padding: 28px 20px 20px;
   }
 
   .result-icon {
@@ -287,7 +288,7 @@ const formattedTime = computed(() => {
   }
 
   .result-title {
-    font-size: 32px;
+    font-size: 28px;
   }
 
   .result-subtitle {
@@ -317,7 +318,7 @@ const formattedTime = computed(() => {
   }
 
   .stat-icon-bg :deep(.v-icon) {
-    font-size: 32px !important;
+    font-size: 28px !important;
   }
 
   .stat-value {
@@ -325,25 +326,33 @@ const formattedTime = computed(() => {
   }
 
   .stat-item.primary .stat-value {
-    font-size: 32px;
+    font-size: 28px;
   }
 
   .result-actions {
-    padding: 20px;
+    padding: 18px;
   }
 }
 
+/* 手機響應式 - 更緊湊的佈局 */
 @media (max-width: 480px) {
+  /* Dialog 本身在小螢幕上調整 */
+  .result-card {
+    margin: 8px;
+  }
+
   .result-header {
-    padding: 28px 16px 16px;
+    padding: 20px 16px 16px;
   }
 
   .result-icon {
     font-size: 56px;
+    margin-bottom: 12px;
   }
 
   .result-title {
-    font-size: 28px;
+    font-size: 24px;
+    margin-bottom: 4px;
   }
 
   .result-subtitle {
@@ -359,30 +368,110 @@ const formattedTime = computed(() => {
   }
 
   .stat-item {
-    padding: 14px;
+    padding: 12px;
     gap: 12px;
+    border-radius: 12px;
   }
 
   .stat-icon-bg {
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
   }
 
   .stat-icon-bg :deep(.v-icon) {
-    font-size: 28px !important;
+    font-size: 24px !important;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    margin-bottom: 2px;
   }
 
   .stat-value {
-    font-size: 22px;
+    font-size: 20px;
   }
 
   .stat-item.primary .stat-value {
-    font-size: 28px;
+    font-size: 24px;
   }
 
   .result-actions {
     padding: 16px;
     gap: 10px;
+  }
+
+  .action-btn {
+    font-size: 15px;
+    padding: 12px 20px;
+  }
+
+  .action-btn :deep(.v-icon) {
+    font-size: 20px !important;
+  }
+}
+
+/* 超小手機 (360px 以下) */
+@media (max-width: 360px) {
+  .result-header {
+    padding: 16px 12px 12px;
+  }
+
+  .result-icon {
+    font-size: 48px;
+    margin-bottom: 8px;
+  }
+
+  .result-title {
+    font-size: 22px;
+  }
+
+  .result-subtitle {
+    font-size: 13px;
+  }
+
+  .result-content {
+    padding: 12px;
+  }
+
+  .stats-grid {
+    gap: 8px;
+  }
+
+  .stat-item {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .stat-icon-bg {
+    width: 36px;
+    height: 36px;
+  }
+
+  .stat-icon-bg :deep(.v-icon) {
+    font-size: 20px !important;
+  }
+
+  .stat-label {
+    font-size: 10px;
+  }
+
+  .stat-value {
+    font-size: 18px;
+  }
+
+  .stat-item.primary .stat-value {
+    font-size: 22px;
+  }
+
+  .result-actions {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .action-btn {
+    font-size: 14px;
+    padding: 10px 16px;
   }
 }
 </style>
