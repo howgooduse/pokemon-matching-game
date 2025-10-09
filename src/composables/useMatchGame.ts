@@ -1,5 +1,5 @@
 import { ref, computed, type Ref, type ComputedRef } from 'vue';
-import { useMatchGameStore } from '@/stores/matchGameStore';
+import { useMatchGameStore } from '@/stores/LinkMatchGameStore';
 
 export function useMatchGame() {
   const gameStore = useMatchGameStore();

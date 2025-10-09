@@ -13,19 +13,10 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/flip-game',  // 翻牌遊戲改到這裡
     name: 'FlipGame',
-    component: () => import('../views/GamePlay.vue'),
+    component: () => import('../views/FlipMatchGame.vue'),
     meta: {
       title: '寶可夢記憶遊戲 - 挑戰你的記憶極限',
       description: '開始挑戰，看你能否記住所有寶可夢！',
-    }
-  },
-  {
-    path: '/game',  // 保留舊路徑相容性
-    name: 'GamePlay',
-    component: () => import('../views/GamePlay.vue'),
-    meta: {
-      title: '開始遊戲 | 寶可夢記憶遊戲',
-      description: '正在進行中的遊戲挑戰，記錄你的得分和時間。',
     }
   },
   {

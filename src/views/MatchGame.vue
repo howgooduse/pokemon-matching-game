@@ -206,7 +206,7 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, watch } from 'vue';
-import { useMatchGameStore } from '@/stores/matchGameStore';
+import { useMatchGameStore } from '@/stores/LinkMatchGameStore';
 import { useMatchGame } from '@/composables/useMatchGame';
 import { useGameTimer } from '@/composables/useGameTimer';
 import { useGameBoard } from '@/composables/useGameBoard';
@@ -462,3 +462,4 @@ onUnmounted(() => {
 </script>
 
 <style scoped src="@/styles/match-game.css"></style>
+@/stores/LinkMatchGameStore

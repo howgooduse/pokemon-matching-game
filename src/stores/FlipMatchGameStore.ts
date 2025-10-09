@@ -46,16 +46,16 @@ export const useGameStore = defineStore('game', () => {
   const gameTimer = ref<number | null>(null);
 
   // ----------------- 遊戲初始化 -----------------
-  function initializeGame(deckSize: number, initialTime: number,shouldStartTimer: boolean) {
+  function initializeGame(deckSize: number, initialTime: number) {
     // 不管遊戲是否啟動，都可以重新初始化牌組 (例如：在 onMounted 時)
     stopTimer(); // 確保重新開始前停止計時器
     
-    score.value = 0;
-    timeLimit.value = initialTime;
-    timeRemaining.value = initialTime;
-    helpsRemaining.value = 3;
-    flippedCards.value = [];
-    isGameActive.value = shouldStartTimer; // 根據參數設定遊戲狀態
+    score.value = 0;
+    timeLimit.value = initialTime;
+    timeRemaining.value = initialTime;
+    helpsRemaining.value = 3;
+    flippedCards.value = [];
+    isGameActive.value = false; // 根據參數設定遊戲狀態
     
     const allPokemonIds = Array.from({ length: 150 }, (_, i) => i + 1);
     const numPairs = deckSize / 2;
@@ -84,26 +84,48 @@ export const useGameStore = defineStore('game', () => {
 
     // 打亂最終卡牌列表
     cards.value = shuffleArray(cardPairs);
+
+    cards.value = shuffleArray(cardPairs);
+    cards.value.forEach(card => card.isFlipped = false); 
     
-    // 啟動計時器
-    startTimer();
+    
   }
   
   // ----------------- 計時器邏輯 -----------------
-  function startTimer() {
-     if (gameTimer.value !== null) clearInterval(gameTimer.value);
+  const PREVIEW_DURATION = 1000; // 預覽時間 (毫秒)
 
-    gameTimer.value = window.setInterval(() => {
-        if (timeRemaining.value > 0 && isGameActive.value) {
-            timeRemaining.value--;
-        } else {
-            clearInterval(gameTimer.value!);
-            if (isGameActive.value) {
-                endGame();
-            }
-        }
-    }, 1000) as unknown as number; 
-    
+  function startGame() {
+    if (isGameActive.value) return; // 避免重複啟動
+
+    // 1. 預覽：所有卡牌翻面 (isFlipped: true)
+    cards.value.forEach(card => card.isFlipped = true);
+
+    // 設定遊戲為活動狀態並啟動計時
+    isGameActive.value = true; 
+
+    // 2. 設置定時器：預覽結束後，正式開始遊戲
+    setTimeout(() => {
+        // 翻回：所有卡牌蓋回 (isFlipped: false)
+        cards.value.forEach(card => card.isFlipped = false);
+        startTimer();
+    }, PREVIEW_DURATION);
+  }
+
+  function startTimer() {
+    if (gameTimer.value !== null) clearInterval(gameTimer.value);
+
+      gameTimer.value = window.setInterval(() => {
+          if (timeRemaining.value > 0 && isGameActive.value) {
+              timeRemaining.value--;
+          } else {
+              clearInterval(gameTimer.value!);
+              if (isGameActive.value) {
+                  endGame();
+              }
+          }
+      // 【修正 2】：startTimer 應該只在 isGameActive.value = true 時才運行計數
+      // 在 initializeGame 中我們已經設定了 isGameActive.value，所以這裡無需額外處理。
+      }, 1000) as unknown as number; 
   }
 
   function stopTimer() {
@@ -200,6 +222,6 @@ export const useGameStore = defineStore('game', () => {
 
   return { 
     cards, score, timeLimit, timeRemaining, helpsRemaining, isGameActive, isChecking,
-    initializeGame, flipCard, useHelp, endGame , startTimer, stopTimer
+    initializeGame, flipCard, useHelp, endGame , startTimer, stopTimer,startGame
   };
 });

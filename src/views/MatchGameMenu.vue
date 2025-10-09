@@ -304,7 +304,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { useMatchGameStore } from '../stores/matchGameStore';
+import { useMatchGameStore } from '@/stores/LinkMatchGameStore';
 
 const router = useRouter();
 const gameStore = useMatchGameStore();
@@ -1004,4 +1004,4 @@ onMounted(() => {
 .leaderboard-list::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
-</style>
+</style>../stores/LinkMatchGameStore
