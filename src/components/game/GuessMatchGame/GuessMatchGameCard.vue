@@ -70,6 +70,10 @@ console.log('卡片 ID:', props.card.pokemonId, '圖片路徑:', imageUrl);
   z-index: 100;
 }
 
+.card-container.floating .card {
+  animation: card-glow 0.75s ease-out;
+}
+
 @keyframes glow-pulse {
   0%, 100% {
     filter: drop-shadow(0 0 0 rgba(255, 215, 0, 0));
@@ -83,6 +87,22 @@ console.log('卡片 ID:', props.card.pokemonId, '圖片路徑:', imageUrl);
     filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8)) 
             drop-shadow(0 0 30px rgba(255, 215, 0, 0.6))
             drop-shadow(0 0 45px rgba(255, 215, 0, 0.4));
+  }
+}
+
+@keyframes card-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 rgba(255, 215, 0, 0);
+  }
+  20%, 60% {
+    box-shadow: 0 0 25px rgba(255, 215, 0, 1),
+                0 0 50px rgba(255, 215, 0, 0.8),
+                0 0 75px rgba(255, 215, 0, 0.6);
+  }
+  40%, 80% {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.8),
+                0 0 40px rgba(255, 215, 0, 0.6),
+                0 0 60px rgba(255, 215, 0, 0.4);
   }
 }
 
