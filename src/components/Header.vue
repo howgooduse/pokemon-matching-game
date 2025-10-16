@@ -52,8 +52,9 @@ const drawer = ref(false);
 
 // 選單項目列表
 const menuItems = [
-  { title: '連連看', icon: 'mdi-link-variant', route: '/' },           // 首頁改成連連看
-  { title: '翻牌遊戲', icon: 'mdi-cards', route: '/flip-game' },      // 翻牌遊戲
+  { title: '連連看', icon: 'mdi-link-variant', route: '/' },
+  { title: '翻翻看', icon: 'mdi-cards', route: '/flip-game' },
+  { title: '猜猜看', icon: 'mdi-cards', route: '/guess-game' }
 ];
 </script>
 

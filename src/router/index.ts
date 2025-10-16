@@ -36,6 +36,15 @@ const routes: Array<RouteRecordRaw> = [
       title: '遊戲進行中 | 寶可夢連連看',
       description: '正在進行中的連連看挑戰，快速配對所有寶可夢！',
     }
+  },
+  {
+    path: '/guess-game',
+    name: 'GuessGame',
+    component: () => import('../views/GuessMatchGame.vue'),
+    meta: {
+      title: '遊戲進行中 | 寶可夢連連看',
+      description: '正在進行中的猜猜看挑戰，快速找到名字的寶可夢！',
+    }
   }
 ]
 
