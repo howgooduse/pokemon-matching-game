@@ -45,6 +45,15 @@ const routes: Array<RouteRecordRaw> = [
       title: '遊戲進行中 | 寶可夢連連看',
       description: '正在進行中的猜猜看挑戰，快速找到名字的寶可夢！',
     }
+  },
+  {
+    path: '/mario-spinner',
+    name: 'MarioSpinner',
+    component: () => import('../components/game/MarioSpinner.vue'),
+    meta: {
+     title: '🍄 瑪利歐轉盤遊戲',
+     description: '轉動轉盤，堆疊方塊，爬升到終點！',
+    }
   }
 ]
 
