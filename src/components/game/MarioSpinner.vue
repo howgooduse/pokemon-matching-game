@@ -95,8 +95,8 @@
             <p>🎯 轉動轉盤獲得指示</p>
             <p>📦 根據結果堆疊方塊</p>
             <p>🏆 爬升到終點線！</p>
-            <p>❓ 遇到神秘方塊抽卡片</p>
-            <p>🔄 REVERSE 反轉順序</p>
+            <p>❓ 神秘方塊抽特殊卡片</p>
+            <p>🔄 翻轉代表順序反轉</p>
           </div>
         </div>
       </div>
@@ -162,21 +162,33 @@ interface Segment {
   climb: number | string;
   icon: string;
   hasImage?: boolean;
+  section?: number;
 }
 
 const segments: Segment[] = [
-  { outer: 'STACK 1', middle: 'CLIMB 1', color1: '#FFD93D', color2: '#FFF9E3', blocks: 1, climb: 1, icon: '📦' },
-  { outer: 'NO BLOCKS!', middle: 'CLIMB 2', color1: '#6BCB77', color2: '#E8F5E9', blocks: 0, climb: 2, icon: '🚫' },
-  { outer: 'STACK 1', middle: 'CLIMB 3', color1: '#4D96FF', color2: '#E3F2FD', blocks: 1, climb: 3, icon: '📦' },
-  { outer: 'STACK 2', middle: 'CLIMB 4', color1: '#FF6B6B', color2: '#FFE5E5', blocks: 2, climb: 4, icon: '📦📦' },
-  { outer: 'STACK 1', middle: 'MYSTERY', color1: '#FFD700', color2: '#FFF9E3', blocks: 1, climb: '?', icon: '❓', hasImage: true },
-  { outer: 'STACK 1', middle: 'CLIMB 3', color1: '#F38181', color2: '#FFE5E5', blocks: 1, climb: 3, icon: '📦' },
-  { outer: 'STACK 1', middle: 'CLIMB 4', color1: '#AA96DA', color2: '#F3EFFF', blocks: 1, climb: 4, icon: '📦' },
-  { outer: 'STACK 1', middle: 'CLIMB 2', color1: '#FCBAD3', color2: '#FFF0F5', blocks: 1, climb: 2, icon: '📦' },
-  { outer: 'STACK 2', middle: 'CLIMB 1', color1: '#FFFFD2', color2: '#FFFFEA', blocks: 2, climb: 1, icon: '📦📦' },
-  { outer: 'STACK 1', middle: 'MYSTERY', color1: '#FFD700', color2: '#FFF9E3', blocks: 1, climb: '?', icon: '❓', hasImage: true },
-  { outer: 'REVERSE', middle: 'PLAY', color1: '#FFB6B9', color2: '#FFF0F1', blocks: 1, climb: 'REVERSE', icon: '🔄' },
-  { outer: 'STACK 1', middle: 'CLIMB 2', color1: '#FEC8D8', color2: '#FFF5F8', blocks: 1, climb: 2, icon: '📦' },
+  // 第1大區 - 堆疊 1 個方塊（橘黃色）
+  { outer: '堆疊 1 個方塊', middle: '爬升 1', color1: '#FFA500', color2: '#FFE4B5', blocks: 1, climb: 1, icon: '📦', section: 1 },
+  { outer: '堆疊 1 個方塊', middle: '爬升 3', color1: '#FFA500', color2: '#FFE4B5', blocks: 1, climb: 3, icon: '📦', section: 1 },
+  { outer: '堆疊 1 個方塊', middle: '爬升 4', color1: '#FFA500', color2: '#FFE4B5', blocks: 1, climb: 4, icon: '📦', section: 1 },
+  { outer: '堆疊 1 個方塊', middle: '爬升 2', color1: '#FFA500', color2: '#FFE4B5', blocks: 1, climb: 2, icon: '📦', section: 1 },
+  
+  // 第2大區 - 不堆疊方塊（藍色）
+  { outer: '不堆疊方塊！', middle: '爬升 2', color1: '#4169E1', color2: '#B0E0E6', blocks: 0, climb: 2, icon: '🚫', section: 2 },
+  { outer: '不堆疊方塊！', middle: '神秘', color1: '#4169E1', color2: '#FFD700', blocks: 0, climb: '?', icon: '❓', hasImage: true, section: 2 },
+  { outer: '不堆疊方塊！', middle: '爬升 3', color1: '#4169E1', color2: '#B0E0E6', blocks: 0, climb: 3, icon: '🚫', section: 2 },
+  { outer: '不堆疊方塊！', middle: '爬升 4', color1: '#4169E1', color2: '#B0E0E6', blocks: 0, climb: 4, icon: '🚫', section: 2 },
+  
+  // 第3大區 - 堆疊 2 個方塊（紅色）
+  { outer: '堆疊 2 個方塊', middle: '爬升 1', color1: '#DC143C', color2: '#FFB6C1', blocks: 2, climb: 1, icon: '📦📦', section: 3 },
+  { outer: '堆疊 2 個方塊', middle: '翻轉', color1: '#DC143C', color2: '#FFD700', blocks: 2, climb: 'REVERSE', icon: '🔄', section: 3 },
+  { outer: '堆疊 2 個方塊', middle: '爬升 2', color1: '#DC143C', color2: '#FFB6C1', blocks: 2, climb: 2, icon: '📦📦', section: 3 },
+  { outer: '堆疊 2 個方塊', middle: '爬升 1', color1: '#DC143C', color2: '#FFB6C1', blocks: 2, climb: 1, icon: '📦📦', section: 3 },
+  
+  // 第4大區 - 堆疊 1 個方塊（綠色）
+  { outer: '堆疊 1 個方塊', middle: '爬升 3', color1: '#32CD32', color2: '#90EE90', blocks: 1, climb: 3, icon: '📦', section: 4 },
+  { outer: '堆疊 1 個方塊', middle: '爬升 4', color1: '#32CD32', color2: '#90EE90', blocks: 1, climb: 4, icon: '📦', section: 4 },
+  { outer: '堆疊 1 個方塊', middle: '爬升 2', color1: '#32CD32', color2: '#90EE90', blocks: 1, climb: 2, icon: '📦', section: 4 },
+  { outer: '堆疊 1 個方塊', middle: '神秘', color1: '#32CD32', color2: '#FFD700', blocks: 1, climb: '?', icon: '❓', hasImage: true, section: 4 },
 ];
 
 // 狀態管理
@@ -242,29 +254,37 @@ function createSegments() {
 
   const segmentsOuter = segmentsOuterRef.value;
   const segmentsMiddle = segmentsMiddleRef.value;
-  const anglePerSegment = 360 / segments.length;
+  const totalSegments = segments.length;
+  const anglePerSegment = 360 / totalSegments;
   
   // 清空現有內容
   segmentsOuter.innerHTML = '';
   segmentsMiddle.innerHTML = '';
   
-  segments.forEach((segment, index) => {
-    const startAngle = index * anglePerSegment - 90;
-    const endAngle = (index + 1) * anglePerSegment - 90;
+  // 繪製外圈（4大格）
+  const outerSections = [
+    { start: 0, end: 4, text: '堆疊 1 個方塊', color: '#FFA500' },
+    { start: 4, end: 8, text: '不堆疊方塊！', color: '#4169E1' },
+    { start: 8, end: 12, text: '堆疊 2 個方塊', color: '#DC143C' },
+    { start: 12, end: 16, text: '堆疊 1 個方塊', color: '#32CD32' },
+  ];
+  
+  outerSections.forEach((section) => {
+    const startAngle = section.start * anglePerSegment - 90;
+    const endAngle = section.end * anglePerSegment - 90;
+    const midAngle = (startAngle + endAngle) / 2;
     
-    // 外圈
-    const pathOuter = describeArc(200, 200, 180, 120, startAngle, endAngle);
+    // 繪製外圈大格
+    const pathOuter = describeArc(200, 200, 190, 125, startAngle, endAngle);
     const segmentOuter = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     segmentOuter.setAttribute('d', pathOuter);
-    segmentOuter.setAttribute('fill', segment.color1);
+    segmentOuter.setAttribute('fill', section.color);
     segmentOuter.setAttribute('stroke', '#fff');
-    segmentOuter.setAttribute('stroke-width', '3');
-    segmentOuter.classList.add('segment');
+    segmentOuter.setAttribute('stroke-width', '4');
     segmentsOuter.appendChild(segmentOuter);
     
     // 外圈文字
-    const midAngle = (startAngle + endAngle) / 2;
-    const textRadius = 150;
+    const textRadius = 157;
     const textX = 200 + textRadius * Math.cos(midAngle * Math.PI / 180);
     const textY = 200 + textRadius * Math.sin(midAngle * Math.PI / 180);
     
@@ -273,14 +293,22 @@ function createSegments() {
     text.setAttribute('y', textY.toString());
     text.setAttribute('text-anchor', 'middle');
     text.setAttribute('transform', `rotate(${midAngle + 90}, ${textX}, ${textY})`);
-    text.classList.add('segment-text');
-    text.style.fontSize = '9px';
+    text.style.fontSize = '11px';
     text.style.fontWeight = 'bold';
-    text.textContent = segment.outer;
+    text.style.fill = 'white';
+    text.style.fontFamily = "'Press Start 2P', cursive";
+    text.textContent = section.text;
     segmentsOuter.appendChild(text);
+  });
+  
+  // 繪製中圈（16小格）
+  segments.forEach((segment, index) => {
+    const startAngle = index * anglePerSegment - 90;
+    const endAngle = (index + 1) * anglePerSegment - 90;
+    const midAngle = (startAngle + endAngle) / 2;
     
-    // 中圈
-    const pathMiddle = describeArc(200, 200, 115, 90, startAngle, endAngle);
+    // 中圈小格
+    const pathMiddle = describeArc(200, 200, 120, 90, startAngle, endAngle);
     const segmentMiddle = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     segmentMiddle.setAttribute('d', pathMiddle);
     segmentMiddle.setAttribute('fill', segment.color2);
@@ -290,13 +318,13 @@ function createSegments() {
     segmentsMiddle.appendChild(segmentMiddle);
     
     // 中圈數字/文字
-    const textRadiusMiddle = 102;
+    const textRadiusMiddle = 105;
     const textXMiddle = 200 + textRadiusMiddle * Math.cos(midAngle * Math.PI / 180);
     const textYMiddle = 200 + textRadiusMiddle * Math.sin(midAngle * Math.PI / 180);
     
     // 如果是問號方塊，顯示圖片
     if (segment.hasImage) {
-      const imageSize = 20;
+      const imageSize = 18;
       const image = document.createElementNS('http://www.w3.org/2000/svg', 'image');
       image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets/question-block.png');
       image.setAttribute('x', (textXMiddle - imageSize / 2).toString());
@@ -313,7 +341,7 @@ function createSegments() {
       textMiddle.setAttribute('text-anchor', 'middle');
       textMiddle.setAttribute('transform', `rotate(${midAngle + 90}, ${textXMiddle}, ${textYMiddle})`);
       textMiddle.classList.add('segment-number');
-      textMiddle.style.fontSize = segment.middle === 'PLAY' ? '9px' : '10px';
+      textMiddle.style.fontSize = '9px';
       textMiddle.style.fontWeight = 'bold';
       textMiddle.textContent = segment.middle;
       segmentsMiddle.appendChild(textMiddle);
@@ -364,7 +392,7 @@ function showResult(segment: Segment) {
   
   if (segment.climb === 'REVERSE') {
     gameState.value.history.push({
-      action: 'REVERSE & PLAY',
+      action: '翻轉遊戲',
       blocks: segment.blocks
     });
   } else if (segment.climb === '?') {
@@ -383,7 +411,7 @@ function showResult(segment: Segment) {
     }, 1000);
     
     gameState.value.history.push({
-      action: 'Climb',
+      action: '爬升',
       blocks: segment.blocks,
       climb: segment.climb
     });
@@ -393,9 +421,9 @@ function showResult(segment: Segment) {
   let html = `<div class="result-icon">${segment.icon}</div>`;
   
   if (segment.climb === 'REVERSE') {
-    html += `<strong>🔄 反轉遊戲！</strong><br>`;
+    html += `<strong>🔄 翻轉遊戲！</strong><br>`;
     html += `堆疊 ${segment.blocks} 個方塊<br>`;
-    html += `反轉遊戲順序！`;
+    html += `遊戲順序翻轉！`;
   } else if (segment.climb === '?') {
     html += `<strong>❓ 神秘方塊！</strong><br>`;
     html += `堆疊 ${segment.blocks} 個方塊<br>`;

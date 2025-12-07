@@ -1,5 +1,3 @@
-// src/stores/gameStore.ts
-
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
