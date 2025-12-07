@@ -356,4 +356,4 @@ const handleBackToMenu = () => {
     font-size: 14px;
   }
 }
-</style>@/stores/FlipMatchGameStore
+</style>

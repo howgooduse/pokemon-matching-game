@@ -54,7 +54,8 @@ const drawer = ref(false);
 const menuItems = [
   { title: '連連看', icon: 'mdi-link-variant', route: '/' },
   { title: '翻翻看', icon: 'mdi-cards', route: '/flip-game' },
-  { title: '猜猜看', icon: 'mdi-cards', route: '/guess-game' }
+  { title: '猜猜看', icon: 'mdi-cards', route: '/guess-game' },
+  { title: '瑪里歐', icon: 'mdi-cards', route: '/mario-spinner' }
 ];
 </script>
 
