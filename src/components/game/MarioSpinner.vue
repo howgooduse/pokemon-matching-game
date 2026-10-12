@@ -150,7 +150,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick } from 'vue';
+import { ref, onMounted } from 'vue';
 
 // 定義轉盤區段
 interface Segment {
@@ -166,29 +166,29 @@ interface Segment {
 }
 
 const segments: Segment[] = [
-  // 第1大區 - 堆疊 1 個方塊（橘黃色）
-  { outer: '堆疊 1 個方塊', middle: '爬升 1', color1: '#FFA500', color2: '#FFE4B5', blocks: 1, climb: 1, icon: '📦', section: 1 },
-  { outer: '堆疊 1 個方塊', middle: '爬升 3', color1: '#FFA500', color2: '#FFE4B5', blocks: 1, climb: 3, icon: '📦', section: 1 },
-  { outer: '堆疊 1 個方塊', middle: '爬升 4', color1: '#FFA500', color2: '#FFE4B5', blocks: 1, climb: 4, icon: '📦', section: 1 },
-  { outer: '堆疊 1 個方塊', middle: '爬升 2', color1: '#FFA500', color2: '#FFE4B5', blocks: 1, climb: 2, icon: '📦', section: 1 },
+  // 第1大區 - 不堆疊方塊（綠色）
+  { outer: '不堆疊方塊！', middle: '爬升 1', color1: '#32CD32', color2: '#E8F5E9', blocks: 0, climb: 1, icon: '🚫', section: 1 },
+  { outer: '不堆疊方塊！', middle: '爬升 3', color1: '#32CD32', color2: '#E8F5E9', blocks: 0, climb: 3, icon: '🚫', section: 1 },
+  { outer: '不堆疊方塊！', middle: '爬升 4', color1: '#32CD32', color2: '#E8F5E9', blocks: 0, climb: 4, icon: '🚫', section: 1 },
+  { outer: '不堆疊方塊！', middle: '爬升 2', color1: '#32CD32', color2: '#E8F5E9', blocks: 0, climb: 2, icon: '🚫', section: 1 },
   
-  // 第2大區 - 不堆疊方塊（藍色）
-  { outer: '不堆疊方塊！', middle: '爬升 2', color1: '#4169E1', color2: '#B0E0E6', blocks: 0, climb: 2, icon: '🚫', section: 2 },
-  { outer: '不堆疊方塊！', middle: '神秘', color1: '#4169E1', color2: '#FFD700', blocks: 0, climb: '?', icon: '❓', hasImage: true, section: 2 },
-  { outer: '不堆疊方塊！', middle: '爬升 3', color1: '#4169E1', color2: '#B0E0E6', blocks: 0, climb: 3, icon: '🚫', section: 2 },
-  { outer: '不堆疊方塊！', middle: '爬升 4', color1: '#4169E1', color2: '#B0E0E6', blocks: 0, climb: 4, icon: '🚫', section: 2 },
+  // 第2大區 - 堆疊 1 個方塊（藍色）
+  { outer: '堆疊 1 個方塊', middle: '爬升 2', color1: '#4169E1', color2: '#E3F2FD', blocks: 1, climb: 2, icon: '📦', section: 2 },
+  { outer: '堆疊 1 個方塊', middle: '神秘', color1: '#4169E1', color2: '#8B4513', blocks: 1, climb: '?', icon: '❓', hasImage: true, section: 2 },
+  { outer: '堆疊 1 個方塊', middle: '爬升 3', color1: '#4169E1', color2: '#E3F2FD', blocks: 1, climb: 3, icon: '📦', section: 2 },
+  { outer: '堆疊 1 個方塊', middle: '爬升 4', color1: '#4169E1', color2: '#E3F2FD', blocks: 1, climb: 4, icon: '📦', section: 2 },
   
   // 第3大區 - 堆疊 2 個方塊（紅色）
-  { outer: '堆疊 2 個方塊', middle: '爬升 1', color1: '#DC143C', color2: '#FFB6C1', blocks: 2, climb: 1, icon: '📦📦', section: 3 },
-  { outer: '堆疊 2 個方塊', middle: '翻轉', color1: '#DC143C', color2: '#FFD700', blocks: 2, climb: 'REVERSE', icon: '🔄', section: 3 },
-  { outer: '堆疊 2 個方塊', middle: '爬升 2', color1: '#DC143C', color2: '#FFB6C1', blocks: 2, climb: 2, icon: '📦📦', section: 3 },
-  { outer: '堆疊 2 個方塊', middle: '爬升 1', color1: '#DC143C', color2: '#FFB6C1', blocks: 2, climb: 1, icon: '📦📦', section: 3 },
+  { outer: '堆疊 2 個方塊', middle: '爬升 1', color1: '#DC143C', color2: '#FFE5E5', blocks: 2, climb: 1, icon: '📦📦', section: 3 },
+  { outer: '堆疊 2 個方塊', middle: '翻轉', color1: '#DC143C', color2: '#FFD93D', blocks: 2, climb: 'REVERSE', icon: '🔄', section: 3 },
+  { outer: '堆疊 2 個方塊', middle: '爬升 2', color1: '#DC143C', color2: '#FFE5E5', blocks: 2, climb: 2, icon: '📦📦', section: 3 },
+  { outer: '堆疊 2 個方塊', middle: '爬升 1', color1: '#DC143C', color2: '#FFE5E5', blocks: 2, climb: 1, icon: '📦📦', section: 3 },
   
-  // 第4大區 - 堆疊 1 個方塊（綠色）
-  { outer: '堆疊 1 個方塊', middle: '爬升 3', color1: '#32CD32', color2: '#90EE90', blocks: 1, climb: 3, icon: '📦', section: 4 },
-  { outer: '堆疊 1 個方塊', middle: '爬升 4', color1: '#32CD32', color2: '#90EE90', blocks: 1, climb: 4, icon: '📦', section: 4 },
-  { outer: '堆疊 1 個方塊', middle: '爬升 2', color1: '#32CD32', color2: '#90EE90', blocks: 1, climb: 2, icon: '📦', section: 4 },
-  { outer: '堆疊 1 個方塊', middle: '神秘', color1: '#32CD32', color2: '#FFD700', blocks: 1, climb: '?', icon: '❓', hasImage: true, section: 4 },
+  // 第4大區 - 堆疊 1 個方塊（橘黃色）
+  { outer: '堆疊 1 個方塊', middle: '爬升 3', color1: '#FFA500', color2: '#FFF9E3', blocks: 1, climb: 3, icon: '📦', section: 4 },
+  { outer: '堆疊 1 個方塊', middle: '爬升 4', color1: '#FFA500', color2: '#FFF9E3', blocks: 1, climb: 4, icon: '📦', section: 4 },
+  { outer: '堆疊 1 個方塊', middle: '爬升 2', color1: '#FFA500', color2: '#FFF9E3', blocks: 1, climb: 2, icon: '📦', section: 4 },
+  { outer: '堆疊 1 個方塊', middle: '神秘', color1: '#FFA500', color2: '#8B4513', blocks: 1, climb: '?', icon: '❓', hasImage: true, section: 4 },
 ];
 
 // 狀態管理
@@ -263,10 +263,10 @@ function createSegments() {
   
   // 繪製外圈（4大格）
   const outerSections = [
-    { start: 0, end: 4, text: '堆疊 1 個方塊', color: '#FFA500' },
-    { start: 4, end: 8, text: '不堆疊方塊！', color: '#4169E1' },
+    { start: 0, end: 4, text: '不堆疊方塊！', color: '#32CD32' },
+    { start: 4, end: 8, text: '堆疊 1 個方塊', color: '#4169E1' },
     { start: 8, end: 12, text: '堆疊 2 個方塊', color: '#DC143C' },
-    { start: 12, end: 16, text: '堆疊 1 個方塊', color: '#32CD32' },
+    { start: 12, end: 16, text: '堆疊 1 個方塊', color: '#FFA500' },
   ];
   
   outerSections.forEach((section) => {
@@ -355,33 +355,30 @@ function spin() {
   
   isSpinning.value = true;
   
-  const spins = 5 + Math.random() * 3;
-  const extraDegrees = Math.random() * 360;
-  const totalRotation = spins * 360 + extraDegrees;
+  const spins = 5 + Math.floor(Math.random() * 3);
+  const randomAngle = Math.floor(Math.random() * 360);
+  const totalRotation = spins * 360 + randomAngle;
   
   currentRotation.value += totalRotation;
   
   setTimeout(() => {
-    const normalizedRotation = currentRotation.value % 360;
-    const segmentAngle = 360 / segments.length;
-    const pointerAngle = (360 - normalizedRotation + 90) % 360;
-    const segmentIndex = Math.floor(pointerAngle / segmentAngle) % segments.length;
+    isSpinning.value = false;
     
-    // 確保 segmentIndex 有效且 segments 陣列中有對應元素
+    const finalAngle = currentRotation.value % 360;
+    const adjustedAngle = (360 - finalAngle + 90) % 360;
+    const segmentIndex = Math.floor(adjustedAngle / (360 / segments.length));
+    
     if (segmentIndex >= 0 && segmentIndex < segments.length) {
       const selectedSegment = segments[segmentIndex];
       if (selectedSegment) {
         showResult(selectedSegment);
       }
     }
-    
-    isSpinning.value = false;
   }, 4000);
 }
 
 // 顯示結果
 function showResult(segment: Segment) {
-  // 更新遊戲狀態
   gameState.value.totalBlocks += segment.blocks;
   
   // 觸發方塊動畫
@@ -389,6 +386,8 @@ function showResult(segment: Segment) {
   setTimeout(() => {
     showBlockAnimation.value = false;
   }, 1000);
+  
+  let html = `<div class="result-icon">${segment.icon}</div>`;
   
   if (segment.climb === 'REVERSE') {
     gameState.value.history.push({
@@ -417,9 +416,6 @@ function showResult(segment: Segment) {
     });
   }
   
-  // 更新結果 HTML
-  let html = `<div class="result-icon">${segment.icon}</div>`;
-  
   if (segment.climb === 'REVERSE') {
     html += `<strong>🔄 翻轉遊戲！</strong><br>`;
     html += `堆疊 ${segment.blocks} 個方塊<br>`;
@@ -433,25 +429,19 @@ function showResult(segment: Segment) {
     html += `<strong>爬升 ${segment.climb} 格</strong>`;
   }
   
-  html += `<br><br>`;
-  html += `📊 總方塊數: ${gameState.value.totalBlocks}<br>`;
-  html += `🎯 總爬升: ${gameState.value.totalClimbs} 格`;
-  
-  resultHTML.value = `<div class="result-text">${html}</div>`;
+  resultHTML.value = html;
 }
 
 // 重置遊戲
 function reset() {
-  currentRotation.value = 0;
   gameState.value = {
     totalBlocks: 0,
     totalClimbs: 0,
     history: []
   };
-  
   resultHTML.value = `
     <div class="result-icon">⭐</div>
-    遊戲已重置！<br>準備開始新的冒險！
+    準備好開始遊戲了嗎？<br>點擊 SPIN 轉動轉盤！
   `;
 }
 
@@ -459,9 +449,10 @@ function reset() {
 function handleStartGame() {
   isGameActive.value = true;
   showResults.value = false;
-  nextTick(() => {
+  reset();
+  setTimeout(() => {
     createSegments();
-  });
+  }, 100);
 }
 
 // 結束遊戲
@@ -472,91 +463,126 @@ function handleEndGame() {
 
 // 重新開始
 function handleRestart() {
+  isGameActive.value = true;
+  showResults.value = false;
   reset();
-  handleStartGame();
+  setTimeout(() => {
+    createSegments();
+  }, 100);
 }
+
+// 組件掛載時初始化
+onMounted(() => {
+  if (isGameActive.value) {
+    createSegments();
+  }
+});
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Permanent+Marker&display=swap');
+
 .game-container {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   position: relative;
   overflow: hidden;
 }
 
-/* 背景動畫雲朵 */
+/* 雲朵動畫背景 */
 .game-container::before {
-  content: '';
+  content: '☁️ ☁️ ☁️ ☁️ ☁️';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: 
-    radial-gradient(ellipse 150px 80px at 20% 30%, rgba(255,255,255,0.3) 0%, transparent 50%),
-    radial-gradient(ellipse 200px 100px at 70% 60%, rgba(255,255,255,0.2) 0%, transparent 50%),
-    radial-gradient(ellipse 180px 90px at 40% 80%, rgba(255,255,255,0.25) 0%, transparent 50%);
-  animation: clouds 60s infinite linear;
-  z-index: 0;
+  top: 10%;
+  left: -20%;
+  font-size: 3rem;
+  opacity: 0.3;
+  animation: float 30s linear infinite;
+  white-space: nowrap;
 }
 
-@keyframes clouds {
-  0% { background-position: 0% 0%, 0% 0%, 0% 0%; }
-  100% { background-position: 100% 0%, -100% 0%, 50% 0%; }
+.game-container::after {
+  content: '☁️ ☁️ ☁️ ☁️';
+  position: absolute;
+  top: 70%;
+  right: -20%;
+  font-size: 3rem;
+  opacity: 0.3;
+  animation: float 25s linear infinite reverse;
+  white-space: nowrap;
+}
+
+@keyframes float {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(120vw); }
 }
 
 .game-playing {
+  max-width: 1200px;
+  margin: 0 auto;
   position: relative;
-  max-width: 900px;
-  width: 100%;
-  z-index: 1;
 }
 
 /* 裝飾金幣 */
 .coin {
   position: absolute;
-  font-size: 2rem;
-  animation: float 3s ease-in-out infinite;
-  pointer-events: none;
-  z-index: 0;
+  font-size: 3rem;
+  animation: bounce 2s ease-in-out infinite;
+  z-index: 1;
 }
 
-@keyframes float {
+.coin:nth-child(1) {
+  top: 5%;
+  left: 5%;
+  animation-delay: 0s;
+}
+
+.coin:nth-child(2) {
+  top: 15%;
+  right: 8%;
+  animation-delay: 0.5s;
+}
+
+.coin:nth-child(3) {
+  bottom: 20%;
+  left: 10%;
+  animation-delay: 1s;
+}
+
+.coin:nth-child(4) {
+  bottom: 10%;
+  right: 15%;
+  animation-delay: 1.5s;
+}
+
+@keyframes bounce {
   0%, 100% { transform: translateY(0) rotate(0deg); }
   50% { transform: translateY(-20px) rotate(180deg); }
 }
 
-.coin:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
-.coin:nth-child(2) { top: 20%; right: 15%; animation-delay: 0.5s; }
-.coin:nth-child(3) { bottom: 15%; left: 15%; animation-delay: 1s; }
-.coin:nth-child(4) { bottom: 20%; right: 10%; animation-delay: 1.5s; }
-
-/* 遊戲標題 */
+/* 遊戲標題區 */
 .game-header {
-  margin-bottom: 20px;
+  text-align: center;
+  margin-bottom: 30px;
+  position: relative;
+  z-index: 10;
 }
 
 .game-title {
-  text-align: center;
-  font-size: clamp(1.5rem, 5vw, 3rem);
-  font-weight: 800;
-  color: #FFD700;
-  margin: 0 0 20px 0;
+  font-size: 2.5rem;
+  color: white;
   text-shadow: 
-    4px 4px 0 #ff6b6b,
-    8px 8px 0 rgba(0,0,0,0.3);
-  animation: bounce 2s ease-in-out infinite;
+    4px 4px 0 #000,
+    6px 6px 0 rgba(0,0,0,0.3);
+  margin-bottom: 20px;
   font-family: 'Press Start 2P', cursive;
+  animation: pulse 2s ease-in-out infinite;
 }
 
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
 }
 
 /* 分數板 */
@@ -564,155 +590,143 @@ function handleRestart() {
   display: flex;
   justify-content: center;
   gap: 20px;
-  margin-bottom: 20px;
-  align-items: center;
   flex-wrap: wrap;
+  margin-bottom: 20px;
 }
 
 .score-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
+  gap: 15px;
+  background: rgba(255, 255, 255, 0.95);
   padding: 15px 30px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s, box-shadow 0.3s;
-  border: 3px solid transparent;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  border: 4px solid #fff;
+  transition: all 0.3s;
 }
 
 .score-item:hover {
-  transform: translateY(-2px);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+}
+
+.score-item.animate-border {
+  animation: borderGlow 1s ease-in-out;
+}
+
+@keyframes borderGlow {
+  0%, 100% { border-color: #fff; }
+  50% { border-color: #fbbf24; box-shadow: 0 0 20px #fbbf24; }
 }
 
 .score-item.total-blocks {
   background: linear-gradient(135deg, #fbbf24, #f59e0b);
-  border-color: #fbbf24;
+  color: white;
 }
 
 .score-item.total-climbs {
   background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-  border-color: #a78bfa;
+  color: white;
 }
 
 .score-icon {
-  font-size: 32px;
-  font-weight: bold;
+  font-size: 2.5rem;
 }
 
 .score-content {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  gap: 5px;
 }
 
 .score-label {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.9);
   font-weight: 600;
+  opacity: 0.9;
   font-family: 'Press Start 2P', cursive;
 }
 
 .score-value {
   font-size: 32px;
-  font-weight: bold;
-  color: white;
-  line-height: 1;
+  font-weight: 900;
   font-family: 'Press Start 2P', cursive;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
-/* 邊框亮燈動畫 */
-@keyframes border-glow {
-  0%, 100% {
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    transform: scale(1);
-  }
-  50% {
-    box-shadow: 0 0 30px rgba(255, 255, 255, 0.8), 
-                0 0 60px rgba(255, 255, 255, 0.6), 
-                0 4px 15px rgba(0, 0, 0, 0.3);
-    transform: scale(1.05);
-  }
-}
-
-.score-item.animate-border {
-  animation: border-glow 0.5s ease-in-out 2;
-}
-
-/* 結束遊戲按鈕 */
 .btn-end-game {
   padding: 15px 30px;
-  border: none;
-  border-radius: 15px;
   background: linear-gradient(135deg, #ef4444, #dc2626);
   color: white;
+  border: 3px solid white;
+  border-radius: 15px;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
   transition: all 0.3s;
   font-family: 'Press Start 2P', cursive;
+  box-shadow: 0 6px 0 #991b1b;
 }
 
 .btn-end-game:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.6);
-  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  transform: translateY(-3px);
+  box-shadow: 0 9px 0 #991b1b;
+}
+
+.btn-end-game:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 #991b1b;
 }
 
 /* 轉盤區域 */
 .game-board {
-  position: relative;
-  width: min(90vw, 500px);
-  height: min(90vw, 500px);
+  width: 500px;
+  height: 500px;
   margin: 30px auto;
-  animation: fadeIn 1s ease-in;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.8); }
-  to { opacity: 1; transform: scale(1); }
+  position: relative;
+  z-index: 10;
 }
 
 .spinner-container {
-  position: relative;
   width: 100%;
   height: 100%;
+  position: relative;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 
+    0 10px 40px rgba(0,0,0,0.3),
+    inset 0 0 20px rgba(0,0,0,0.1);
+  border: 8px solid #fff;
 }
 
-svg {
+#spinner-svg {
   width: 100%;
   height: 100%;
-  filter: drop-shadow(0 10px 30px rgba(0,0,0,0.4));
 }
 
 .spinner-wheel {
-  transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
   transform-origin: center;
+  transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
 }
 
 .segment {
-  cursor: pointer;
   transition: opacity 0.3s;
+  cursor: pointer;
 }
 
 .segment:hover {
-  opacity: 0.9;
+  opacity: 0.8;
 }
 
 .segment-text {
-  font-family: 'Permanent Marker', cursive;
-  font-size: 16px;
-  font-weight: bold;
   fill: white;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  font-family: 'Press Start 2P', cursive;
   pointer-events: none;
 }
 
 .segment-number {
-  font-family: 'Press Start 2P', cursive;
-  font-size: 14px;
   fill: #333;
+  font-family: 'Press Start 2P', cursive;
   font-weight: bold;
   pointer-events: none;
 }
@@ -721,131 +735,171 @@ svg {
   filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
 }
 
+/* 箭頭指針 */
 .arrow-pointer {
   position: absolute;
   top: 50%;
   left: 50%;
+  width: 10px;
+  height: 160px;
+  background: linear-gradient(180deg, #E74C3C 0%, #C0392B 100%);
+  transform: translate(-50%, -100%);
+  transform-origin: center bottom;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.5));
+  z-index: 15;
+  pointer-events: none;
+  border-radius: 5px 5px 0 0;
+  clip-path: polygon(50% 0%, 100% 15%, 100% 100%, 0% 100%, 0% 15%);
+}
+
+.arrow-pointer::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
   width: 0;
   height: 0;
-  border-left: 25px solid transparent;
-  border-right: 25px solid transparent;
-  border-top: 60px solid white;
-  transform: translate(-50%, -150px);
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
-  z-index: 10;
+  border-left: 18px solid transparent;
+  border-right: 18px solid transparent;
+  border-bottom: 30px solid #E74C3C;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
 }
 
 .arrow-pointer::after {
   content: '';
   position: absolute;
-  width: 20px;
-  height: 20px;
-  background: white;
+  width: 35px;
+  height: 35px;
+  background: radial-gradient(circle, #34495E 0%, #2C3E50 70%, #1A252F 100%);
   border-radius: 50%;
-  top: -70px;
+  bottom: -17px;
   left: 50%;
   transform: translateX(-50%);
+  box-shadow: 
+    0 0 0 3px #95A5A6,
+    0 0 0 5px #ECF0F1,
+    inset 0 2px 4px rgba(0,0,0,0.4),
+    0 4px 10px rgba(0,0,0,0.5);
 }
 
 /* 控制按鈕 */
 .controls {
-  margin-top: 40px;
   display: flex;
-  gap: 20px;
   justify-content: center;
-  flex-wrap: wrap;
+  gap: 20px;
+  margin: 30px 0;
+  position: relative;
+  z-index: 10;
 }
 
-button {
-  font-family: 'Press Start 2P', cursive;
-  font-size: clamp(0.7rem, 2vw, 1rem);
-  padding: 15px 30px;
+.btn-spin,
+.btn-reset {
+  padding: 20px 50px;
   border: 4px solid #fff;
   border-radius: 50px;
+  font-size: 28px;
+  font-weight: bold;
   cursor: pointer;
   transition: all 0.1s;
+  font-family: 'Press Start 2P', cursive;
   position: relative;
-  overflow: hidden;
 }
 
 .btn-spin {
-  background: linear-gradient(145deg, #ff6b6b, #ff5252);
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
   color: white;
   box-shadow: 
-    0 8px 0 #c92a2a,
-    0 12px 20px rgba(0,0,0,0.3);
+    0 10px 0 #d97706,
+    0 15px 30px rgba(251, 191, 36, 0.5);
+}
+
+.btn-spin:hover:not(:disabled) {
+  transform: scale(1.05);
+}
+
+.btn-spin:active:not(:disabled) {
+  transform: translateY(6px);
+  box-shadow: 
+    0 4px 0 #d97706,
+    0 8px 20px rgba(251, 191, 36, 0.5);
 }
 
 .btn-spin:disabled {
-  background: #ccc;
+  opacity: 0.6;
   cursor: not-allowed;
-  box-shadow: 
-    0 8px 0 #999,
-    0 12px 20px rgba(0,0,0,0.2);
 }
 
 .btn-reset {
-  background: linear-gradient(145deg, #4ade80, #22c55e);
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
   color: white;
   box-shadow: 
-    0 8px 0 #15803d,
-    0 12px 20px rgba(0,0,0,0.3);
+    0 10px 0 #6d28d9,
+    0 15px 30px rgba(139, 92, 246, 0.5);
 }
 
-button:not(:disabled):active {
-  transform: translateY(4px);
-}
-
-.btn-spin:not(:disabled):active {
-  box-shadow: 
-    0 4px 0 #c92a2a,
-    0 6px 10px rgba(0,0,0,0.3);
+.btn-reset:hover {
+  transform: scale(1.05);
 }
 
 .btn-reset:active {
+  transform: translateY(6px);
   box-shadow: 
-    0 4px 0 #15803d,
-    0 6px 10px rgba(0,0,0,0.3);
+    0 4px 0 #6d28d9,
+    0 8px 20px rgba(139, 92, 246, 0.5);
 }
 
 /* 結果顯示 */
 .result {
+  text-align: center;
   margin-top: 30px;
-  padding: 20px 40px;
-  background: rgba(255,255,255,0.95);
-  border-radius: 20px;
-  border: 4px solid #FFD700;
-  min-height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  animation: slideUp 0.5s ease-out;
-}
-
-@keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  position: relative;
+  z-index: 10;
 }
 
 .result-text {
-  font-size: clamp(1rem, 3vw, 1.5rem);
+  background: rgba(255, 255, 255, 0.95);
+  padding: 30px;
+  border-radius: 20px;
+  font-size: 24px;
+  font-weight: bold;
   color: #333;
-  text-align: center;
-  line-height: 1.6;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  border: 4px solid #fbbf24;
+  max-width: 600px;
+  margin: 0 auto;
+  animation: slideUp 0.5s ease-out;
   font-family: 'Press Start 2P', cursive;
+  line-height: 1.8;
 }
 
 .result-icon {
-  font-size: 3rem;
-  margin-bottom: 10px;
-  animation: pop 0.5s ease-out;
+  font-size: 4rem;
+  margin-bottom: 20px;
+  animation: pop 0.6s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes pop {
-  0% { transform: scale(0); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* 開始遊戲覆蓋層 */
@@ -855,62 +909,65 @@ button:not(:disabled):active {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 500;
+  z-index: 1000;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(5px);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
   border-radius: 20px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .overlay-content {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.95), rgba(245, 158, 11, 0.95));
+  padding: 60px 50px;
+  border-radius: 30px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   text-align: center;
-  padding: 40px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  backdrop-filter: blur(15px);
-  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  animation: scaleIn 0.4s ease-out;
+  max-width: 90%;
 }
 
 .menu-title {
   font-size: 48px;
-  font-weight: 800;
-  color: #FFD700;
-  margin-bottom: 10px;
-  text-shadow: 
-    4px 4px 0 #ff6b6b,
-    8px 8px 0 rgba(0,0,0,0.3);
+  font-weight: 900;
+  color: white;
+  margin-bottom: 15px;
+  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   font-family: 'Press Start 2P', cursive;
 }
 
 .menu-subtitle {
-  font-size: 20px;
+  font-size: 24px;
   color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 30px;
-  font-weight: 500;
-  font-family: 'Press Start 2P', cursive;
+  margin-bottom: 40px;
+  font-weight: 600;
 }
 
 .btn-start-main {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 15px;
   padding: 20px 60px;
-  border: 4px solid #fff;
-  border-radius: 50px;
-  background: linear-gradient(135deg, #4ade80, #22c55e);
+  background: linear-gradient(135deg, #10b981, #059669);
   color: white;
+  border: 4px solid white;
+  border-radius: 50px;
   font-size: 28px;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 
-    0 10px 0 #15803d,
-    0 15px 30px rgba(34, 197, 94, 0.5);
   transition: all 0.1s;
-  animation: pulse-big 2s ease-in-out infinite;
-  margin-bottom: 30px;
+  margin: 0 auto 30px;
+  box-shadow: 
+    0 10px 0 #047857,
+    0 15px 30px rgba(16, 185, 129, 0.5);
   font-family: 'Press Start 2P', cursive;
 }
 
@@ -921,48 +978,27 @@ button:not(:disabled):active {
 .btn-start-main:active {
   transform: translateY(6px);
   box-shadow: 
-    0 4px 0 #15803d,
-    0 8px 20px rgba(34, 197, 94, 0.5);
-}
-
-.start-btn-text {
-  white-space: nowrap;
+    0 4px 0 #047857,
+    0 8px 20px rgba(16, 185, 129, 0.5);
 }
 
 .start-btn-icon {
   font-size: 32px;
 }
 
-@keyframes pulse-big {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-}
-
 .game-rules {
-  text-align: left;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 20px;
+  border-radius: 15px;
   color: white;
   font-size: 14px;
-  line-height: 1.8;
-  padding: 20px;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 15px;
-  max-width: 320px;
-  margin: 0 auto;
-  font-family: 'Press Start 2P', cursive;
+  line-height: 2;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 .game-rules p {
   margin: 5px 0;
-}
-
-.game-rules p:first-child {
-  font-weight: bold;
-  margin-bottom: 10px;
-  font-size: 16px;
 }
 
 /* 遊戲結束視窗 */
@@ -992,17 +1028,6 @@ button:not(:disabled):active {
   max-height: 80vh;
   overflow-y: auto;
   animation: scaleIn 0.4s ease-out;
-}
-
-@keyframes scaleIn {
-  from {
-    transform: scale(0.8);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
 }
 
 .result-title {
