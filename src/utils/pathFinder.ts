@@ -80,7 +80,7 @@ export class PathFinder {
   private tryDirectPath(start: Position, end: Position): PathResult {
     // 同一行或同一列
     if (start.row === end.row || start.col === end.col) {
-      if (this.isLinePathClear(start, end, false)) {
+      if (this.isLinePathClear(start, end)) {
         return {
           found: true,
           path: [start, end],
@@ -213,8 +213,8 @@ export class PathFinder {
 
     // 檢查 start -> corner 和 corner -> end 的路徑
     return (
-      this.isLinePathClear(start, corner, true) &&
-      this.isLinePathClear(corner, end, true)
+      this.isLinePathClear(start, corner) &&
+      this.isLinePathClear(corner, end)
     );
   }
 
@@ -237,60 +237,35 @@ export class PathFinder {
 
     // 檢查三段路徑
     return (
-      this.isLinePathClear(start, corner1, true) &&
-      this.isLinePathClear(corner1, corner2, true) &&
-      this.isLinePathClear(corner2, end, true)
+      this.isLinePathClear(start, corner1) &&
+      this.isLinePathClear(corner1, corner2) &&
+      this.isLinePathClear(corner2, end)
     );
   }
 
   /**
-   * 檢查兩點之間的直線路徑是否暢通
-   * @param allowEndpoint 是否允許終點有方塊
+   * 檢查兩點之間（不含兩端點）的直線路徑是否暢通
    */
-  private isLinePathClear(from: Position, to: Position, allowEndpoint: boolean): boolean {
+  private isLinePathClear(from: Position, to: Position): boolean {
     if (from.row === to.row) {
-      // 水平線
-      const minCol = Math.min(from.col, to.col);
-      const maxCol = Math.max(from.col, to.col);
       const boardRow = this.board[from.row];
-      
       if (!boardRow) return false;
-      
-      for (let col = minCol; col <= maxCol; col++) {
-        if (boardRow[col]) {
-          // 起點和終點可以有方塊
-          if (col === from.col || col === to.col) {
-            if (!allowEndpoint && col !== from.col && col !== to.col) {
-              return false;
-            }
-          } else {
-            return false;
-          }
-        }
-      }
-      return true;
-    } else if (from.col === to.col) {
-      // 垂直線
-      const minRow = Math.min(from.row, to.row);
-      const maxRow = Math.max(from.row, to.row);
-      
-      for (let row = minRow; row <= maxRow; row++) {
-        const boardRow = this.board[row];
-        if (!boardRow) return false;
-        
-        if (boardRow[from.col]) {
-          if (row === from.row || row === to.row) {
-            if (!allowEndpoint && row !== from.row && row !== to.row) {
-              return false;
-            }
-          } else {
-            return false;
-          }
-        }
+      const [min, max] = from.col < to.col ? [from.col, to.col] : [to.col, from.col];
+      for (let col = min + 1; col < max; col++) {
+        if (boardRow[col]) return false;
       }
       return true;
     }
-    
+
+    if (from.col === to.col) {
+      const [min, max] = from.row < to.row ? [from.row, to.row] : [to.row, from.row];
+      for (let row = min + 1; row < max; row++) {
+        const boardRow = this.board[row];
+        if (!boardRow || boardRow[from.col]) return false;
+      }
+      return true;
+    }
+
     return false;
   }
 
@@ -310,34 +285,5 @@ export class PathFinder {
    */
   private positionToIndex(row: number, col: number): number {
     return row * this.cols + col;
-  }
-
-  /**
-   * 檢查是否還有可配對的方塊
-   */
-  hasAvailableMatches(tiles: Map<number, number>): boolean {
-    const indices = Array.from(tiles.keys());
-    
-    for (let i = 0; i < indices.length; i++) {
-      const idx1 = indices[i];
-      if (idx1 === undefined) continue;
-      
-      for (let j = i + 1; j < indices.length; j++) {
-        const idx2 = indices[j];
-        if (idx2 === undefined) continue;
-        
-        const id1 = tiles.get(idx1);
-        const id2 = tiles.get(idx2);
-        
-        if (id1 !== undefined && id2 !== undefined && id1 === id2) {
-          const result = this.findPath(idx1, idx2);
-          if (result.found) {
-            return true;
-          }
-        }
-      }
-    }
-    
-    return false;
   }
 }

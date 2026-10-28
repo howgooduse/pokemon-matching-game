@@ -1,0 +1,260 @@
+/*
+ * 全站設計語彙：矽膠糖果（童趣撞色）
+ * - 奶油米底＋淡淡圓點
+ * - 三個主色像矽膠錶帶撞色：奶油黃、番茄橘紅、森林綠
+ * - 圓角大、霧面、不用漸層；每個塊狀元件底下有一條同色系深色「厚度邊」
+ */
+:root {
+  /* 底色 */
+  --c-bg: #fff4dc;
+  --c-bg-dot: #f4e2b8;
+  --c-paper: #fffdf6;
+  --c-line: #eedcb0;
+  --c-scrim: rgba(34, 64, 58, 0.55);
+
+  /* 文字：深綠墨色，比純黑柔和 */
+  --c-ink: #22403a;
+  --c-ink-muted: #6b8178;
+
+  /* 三個主色（各有一個深色厚度邊與一個淺色底） */
+  --c-yellow: #f8e27c;
+  --c-yellow-deep: #dfc152;
+  --c-yellow-soft: #fdf3c4;
+
+  --c-tomato: #ee5b36;
+  --c-tomato-deep: #c4411f;
+  --c-tomato-soft: #fdddd1;
+
+  --c-green: #2f5b4d;
+  --c-green-deep: #1d3d33;
+  --c-sage: #6f9c8a;
+  --c-sage-deep: #4f7c6b;
+  --c-sage-soft: #dcebe3;
+
+  /* 形狀 */
+  --radius-xl: 32px;
+  --radius-lg: 24px;
+  --radius: 16px;
+  --radius-sm: 12px;
+
+  /* 厚度邊：用實色往下推，不用模糊陰影 */
+  --edge: 0 5px 0;
+  --edge-sm: 0 3px 0;
+
+  --font: 'Fredoka', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', system-ui, sans-serif;
+}
+
+html,
+body {
+  background-color: var(--c-bg);
+}
+
+body,
+.v-application {
+  font-family: var(--font) !important;
+  color: var(--c-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 背景：奶油米底＋圓點 */
+.v-application {
+  background-color: var(--c-bg) !important;
+  background-image: radial-gradient(var(--c-bg-dot) 2.2px, transparent 2.6px) !important;
+  background-size: 28px 28px !important;
+}
+
+:focus-visible {
+  outline: 3px solid var(--c-tomato);
+  outline-offset: 3px;
+}
+
+/* ---------- 共用按鈕：胖胖的膠囊，按下去會「壓扁」 ---------- */
+.ui-btn {
+  --btn-bg: var(--c-paper);
+  --btn-fg: var(--c-ink);
+  --btn-edge: var(--c-line);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--btn-fg);
+  background: var(--btn-bg);
+  border: none;
+  border-radius: 999px;
+  box-shadow: var(--edge-sm) var(--btn-edge);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.08s ease,
+    filter 0.15s;
+}
+
+.ui-btn:hover:not(:disabled) {
+  filter: brightness(1.04);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 var(--btn-edge);
+}
+
+.ui-btn:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: 0 0 0 var(--btn-edge);
+}
+
+.ui-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* 主要行動：番茄紅 */
+.ui-btn--primary {
+  --btn-bg: var(--c-tomato);
+  --btn-fg: #fff;
+  --btn-edge: var(--c-tomato-deep);
+}
+
+/* 頁面上的次要按鈕：白底＋綠邊 */
+.ui-btn--soft {
+  --btn-bg: var(--c-paper);
+  --btn-fg: var(--c-green);
+  --btn-edge: var(--c-sage);
+  outline: 2px solid var(--c-sage-soft);
+  outline-offset: -2px;
+}
+
+/* 彈窗裡的主要按鈕：森林綠 */
+.ui-btn--dark {
+  --btn-bg: var(--c-green);
+  --btn-fg: var(--c-yellow);
+  --btn-edge: var(--c-green-deep);
+}
+
+/* 彈窗裡的次要按鈕：奶油黃 */
+.ui-btn--outline {
+  --btn-bg: var(--c-yellow);
+  --btn-fg: var(--c-green);
+  --btn-edge: var(--c-yellow-deep);
+}
+
+.ui-btn--block {
+  width: 100%;
+}
+.ui-btn--lg {
+  padding: 14px 28px;
+  font-size: 17px;
+  box-shadow: var(--edge) var(--btn-edge);
+}
+.ui-btn--lg:hover:not(:disabled) {
+  box-shadow: 0 6px 0 var(--btn-edge);
+}
+.ui-btn--lg:active:not(:disabled) {
+  transform: translateY(5px);
+}
+
+/* ---------- 共用：彈窗（奶油紙＋黃色錶框） ---------- */
+.ui-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: var(--c-scrim);
+}
+
+.ui-panel {
+  width: 100%;
+  max-width: 460px;
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 32px 28px 28px;
+  color: var(--c-ink);
+  background: var(--c-paper);
+  border: 6px solid var(--c-yellow);
+  border-radius: var(--radius-xl);
+  box-shadow:
+    0 8px 0 var(--c-yellow-deep),
+    0 24px 50px rgba(29, 61, 51, 0.25);
+}
+
+.ui-panel__title {
+  margin: 0 0 20px;
+  font-size: 26px;
+  font-weight: 900;
+  text-align: center;
+  color: var(--c-green);
+}
+
+.ui-panel__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 26px;
+}
+
+/* 彈窗進出場：輕輕彈一下 */
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.2s ease;
+}
+.modal-enter-active .ui-panel {
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.modal-leave-active .ui-panel {
+  transition: transform 0.15s ease;
+}
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+.modal-enter-from .ui-panel,
+.modal-leave-to .ui-panel {
+  transform: translateY(16px) scale(0.92);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- 共用：頁面與棋盤容器 ---------- */
+.game-page {
+  position: relative;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 28px 24px 56px;
+}
+
+/* 棋盤：森林綠的錶帶色塊，外圈一道番茄紅 */
+.board-well {
+  position: relative;
+  padding: 20px;
+  background: var(--c-green);
+  border: 6px solid var(--c-tomato);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 8px 0 var(--c-tomato-deep);
+}
+
+@media (max-width: 600px) {
+  .game-page {
+    padding: 16px 12px 40px;
+  }
+  .board-well {
+    padding: 10px;
+    border-width: 4px;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 5px 0 var(--c-tomato-deep);
+  }
+}

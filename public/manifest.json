@@ -3,8 +3,8 @@
   "short_name": "寶可夢遊戲",
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#2c3e50",
-  "background_color": "#ffffff",
+  "theme_color": "#18213a",
+  "background_color": "#18213a",
   "icons": [
     {
       "src": "/assets/icon-192x192.png",
